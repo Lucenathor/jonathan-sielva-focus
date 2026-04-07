@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Implementación — Jonathan Sielva | FOCUS x Lucenathor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #1f1f35;
+            --accent: #6c5ce7;
+            --accent-light: #a29bfe;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --success: #00cec9;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a0a0b8;
+            --text-muted: #6b6b80;
+            --border: rgba(255,255,255,0.06);
+            --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            --gradient-2: linear-gradient(135deg, #00cec9, #55efc4);
+            --gradient-3: linear-gradient(135deg, #fd79a8, #e84393);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 206, 201, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(253, 121, 168, 0.05) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .hero {
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(108, 92, 231, 0.15);
+            border: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-light);
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #a29bfe 50%, #00cec9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto 16px;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .hero-meta-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent-light);
+        }
+
+        /* Section styles */
+        .section {
+            padding: 48px 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .section-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .section-number.purple { background: var(--gradient-1); }
+        .section-number.teal { background: var(--gradient-2); color: #0a0a0f; }
+        .section-number.pink { background: var(--gradient-3); }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(108, 92, 231, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .card-icon.purple { background: rgba(108, 92, 231, 0.15); }
+        .card-icon.teal { background: rgba(0, 206, 201, 0.15); }
+        .card-icon.pink { background: rgba(253, 121, 168, 0.15); }
+        .card-icon.yellow { background: rgba(253, 203, 110, 0.15); }
+        .card-icon.orange { background: rgba(225, 112, 85, 0.15); }
+
+        .card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .card .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+            margin-right: 6px;
+        }
+
+        .tag.urgent { background: rgba(225, 112, 85, 0.15); color: #e17055; }
+        .tag.important { background: rgba(108, 92, 231, 0.15); color: #a29bfe; }
+        .tag.growth { background: rgba(0, 206, 201, 0.15); color: #00cec9; }
+        .tag.revenue { background: rgba(253, 203, 110, 0.15); color: #fdcb6e; }
+
+        /* Grid layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--accent-light);
+        }
+
+        .info-box p, .info-box li {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-box ul li:last-child { border-bottom: none; }
+
+        .info-box ul li::before {
+            content: '→';
+            color: var(--accent);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Viral section */
+        .viral-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .viral-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-3);
+        }
+
+        .viral-card .viral-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .viral-card h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .viral-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Steps */
+        .step {
+            display: flex;
+            gap: 20px;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child { border-bottom: none; }
+
+        .step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 14px 16px;
+            background: rgba(108, 92, 231, 0.1);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:hover td {
+            background: rgba(108, 92, 231, 0.05);
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(0, 206, 201, 0.08));
+            border: 1px solid rgba(108, 92, 231, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 24px 0;
+        }
+
+        .highlight-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .highlight-box p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .checklist li:last-child { border-bottom: none; }
+
+        .check-box {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--accent);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 48px 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 48px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: var(--accent-light);
+            text-decoration: none;
+        }
+
+        /* Link styles */
+        a {
+            color: var(--accent-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { padding: 48px 0 32px; }
+            .hero-meta { gap: 16px; }
+            .section { padding: 32px 0; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Script section */
+        .script-box {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            font-family: 'Inter', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .script-box .hook {
+            color: #e17055;
+            font-weight: 700;
+        }
+
+        .script-box .body-text {
+            color: var(--text-primary);
+        }
+
+        .script-box .cta {
+            color: #00cec9;
+            font-weight: 700;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-1);
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* Nav */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            padding: 14px 0;
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+
+        /* KPI boxes */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .kpi-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="nav-logo">FOCUS x Jonathan</div>
+            <div class="nav-links">
+                <a href="#contexto">Contexto</a>
+                <a href="#numeros">Números</a>
+                <a href="#virales">Virales</a>
+                <a href="#embudo">Embudo</a>
+                <a href="#tareas">Tareas</a>
+                <a href="#herramientas">Herramientas</a>
+                <a href="#reclutamiento">Equipo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="container">
+        <div class="hero" style="padding-top: 120px;">
+            <div class="hero-badge">DOCUMENTO DE IMPLEMENTACIÓN</div>
+            <h1>Plan Estratégico para Jonathan Sielva</h1>
+            <p>Resumen completo de la reunión de consultoría con Adrián Lucena (Lucenathor) y Sergio Rodríguez. Todo lo que necesitas para escalar tu negocio de energía solar y Solatube.</p>
+            
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    19 de marzo de 2026
+                </div>
+                <div class="hero-meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    139 minutos de reunión
+                </div>
+                <div class="hero-meta-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Adrián Lucena &middot; Sergio Rodríguez &middot; Jonathan Sielva
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: CONTEXTO DE LA EMPRESA -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="contexto">
+            <div class="section-header">
+                <div class="section-number purple">1</div>
+                <h2 class="section-title">Contexto de la Empresa</h2>
+            </div>
+
+            <div class="info-box">
+                <h4>Datos de Jonathan Sielva Gonzalez</h4>
+                <ul>
+                    <li><strong>Ubicación:</strong> Olot, La Garrocha (Girona, Cataluña). A 45 min de Francia, 1h20 de Barcelona.</li>
+                    <li><strong>Empresas:</strong> <strong>Voltaik</strong> (instaladora/ingeniería fotovoltaica) + <strong>Somni Energía</strong> (comercializadora eléctrica) + distribución de <strong>Solatube</strong>.</li>
+                    <li><strong>Zona de operación:</strong> Girona, Costa Brava, Barcelona y toda Cataluña.</li>
+                    <li><strong>Socio clave:</strong> Jordi — gestiona almacén, logística y tiene base de datos de +25.000 clientes Solatube instalados.</li>
+                    <li><strong>Situación actual:</strong> Ha eliminado a los 5 comerciales de Voltaik y se ha quedado solo. Se ha centrado en B2B. Quiere digitalizar, automatizar y escalar con marca personal.</li>
+                    <li><strong>Objetivo principal:</strong> Convertirse en la imagen/marca personal del negocio (Jonathan Solar), captar clientes con contenido viral y embudos digitales, y escalar con equipo comercial.</li>
+                </ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="info-box">
+                    <h4>Productos y Servicios</h4>
+                    <ul>
+                        <li><strong>Fotovoltaica</strong> — 90% de facturación actual. Instalación de paneles solares residenciales y comerciales.</li>
+                        <li><strong>Solatube</strong> — Producto estrella para escalar. Tubo solar con espejos de 99.7% reflectividad. Iluminación natural sin electricidad.</li>
+                        <li><strong>Comercializadora eléctrica (Somni)</strong> — Gestión de energía, facturación mensual recurrente.</li>
+                        <li><strong>Cargadores eléctricos</strong> — Producto de entrada (800€) para hacer cross-selling.</li>
+                        <li><strong>Aerotermia</strong> — Servicio complementario.</li>
+                        <li><strong>Batería integrada Solatube</strong> — Producto propio en desarrollo (impresora 3D). Fase piloto de 8 meses.</li>
+                    </ul>
+                </div>
+                <div class="info-box">
+                    <h4>Diferenciación Competitiva</h4>
+                    <ul>
+                        <li>Solatube es un producto <strong>100% pasivo</strong>: se instala y funciona de por vida sin mantenimiento.</li>
+                        <li><strong>Nadie en España</strong> está haciendo marketing digital agresivo con Solatube.</li>
+                        <li>Solo existe 1 vídeo en TikTok sobre Solatube (un venezolano con 30K views).</li>
+                        <li>Margen actual: <strong>65%</strong> como revendedor. Potencial de <strong>80%</strong> comprando directo a fábrica.</li>
+                        <li>Servicio 360° en energía: fotovoltaica + comercializadora + Solatube + cargadores + aerotermia.</li>
+                        <li>Proyecto referencia: <strong>Casa Verde</strong> — 64 Solatubes instalados, espacio 100% autónomo (sin red, sin agua de estado). Showroom perfecto para contenido.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: NÚMEROS CLAVE -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="numeros">
+            <div class="section-header">
+                <div class="section-number teal">2</div>
+                <h2 class="section-title">Números Clave del Solatube</h2>
+            </div>
+
+            <div class="kpi-grid">
+                <div class="kpi-box">
+                    <div class="kpi-value">1.600€</div>
+                    <div class="kpi-label">Precio venta (con IVA)</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-value">~400€</div>
+                    <div class="kpi-label">Coste (producto + envío + gestión Jordi)</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-value">1.200€</div>
+                    <div class="kpi-label">Margen bruto por unidad</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-value">65%</div>
+                    <div class="kpi-label">Margen actual (revendedor)</div>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <h4>Desglose Financiero (calculado en reunión)</h4>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Importe</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Precio de venta (con IVA)</td>
+                            <td><strong>1.600€</strong></td>
+                            <td>Precio medio últimas 4-5 ventas</td>
+                        </tr>
+                        <tr>
+                            <td>Coste producto + logística</td>
+                            <td><strong>~400€</strong></td>
+                            <td>Incluye envío, planos, accesorios y comisión Jordi</td>
+                        </tr>
+                        <tr>
+                            <td>Margen bruto</td>
+                            <td><strong>~1.200€</strong></td>
+                            <td>Antes de impuestos</td>
+                        </tr>
+                        <tr>
+                            <td>Comisión Jordi (estimada)</td>
+                            <td><strong>15-20%</strong></td>
+                            <td>Se podría eliminar comprando directo a fábrica</td>
+                        </tr>
+                        <tr>
+                            <td>Margen potencial (sin Jordi)</td>
+                            <td><strong>~80%</strong></td>
+                            <td>Comprando directo a fábrica</td>
+                        </tr>
+                        <tr>
+                            <td>Base de clientes existentes</td>
+                            <td><strong>25.000</strong></td>
+                            <td>Clientes de Jordi — oportunidad de mantenimiento y cross-sell</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <h3>&#9889; Oportunidad de Recurrencia: Mantenimiento Anual Solatube</h3>
+                <p>Crear una oferta de <strong>mantenimiento anual</strong> para los 25.000 clientes existentes de Jordi. Incluye: revisión de cúpula, limpieza, verificación del sistema. Precio sugerido: acabado en <strong>7</strong> (97€, 107€, 117€). Cobro vía <strong>Stripe</strong> con cargo diferido a 365 días (0€ al inicio, cobro automático al año). Esto genera una base de ingresos recurrentes masiva. Además, cada visita de mantenimiento es una oportunidad de <strong>cross-selling</strong>: "¿Has pensado en paneles solares? ¿Cambio de comercializadora?"</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: ESTRATEGIA DE VIRALES -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="virales">
+            <div class="section-header">
+                <div class="section-number pink">3</div>
+                <h2 class="section-title">Estrategia de Viralización</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>&#127909; Principio Fundamental</h3>
+                <p>No hay contenido viral de Solatube en España. Esto es una <strong>oportunidad brutal</strong>. La estrategia es <strong>extrapolar las estructuras virales que ya funcionan en placas solares</strong> y aplicarlas al Solatube. El producto es tan disruptivo que un solo reel viral puede generar 20+ ventas directas. <strong>Mínimo 2 virales por semana</strong> con la estructura indicada.</p>
+            </div>
+
+            <div class="grid-2" style="margin-top: 24px;">
+                <div class="viral-card">
+                    <div class="viral-number">01</div>
+                    <h4>Viral Principal: "Luz Gratis Sin Pagar a Ninguna Empresa"</h4>
+                    <p>Este es el viral <strong>hiperviral</strong> que Adrián identificó. Estructura validada con 50.000+ likes en placas solares. Se adapta directamente al Solatube.</p>
+                    <div class="script-box" style="margin-top: 16px;">
+                        <p><span class="hook">HOOK:</span> "¿Quieres luz gratis sin tener que pagarle la luz a ninguna empresa? Fíjate en esto."</p>
+                        <p><span class="body-text">PASO 1:</span> (En el tejado) "Primero, hacemos la obra."</p>
+                        <p><span class="body-text">PASO 2:</span> "Ahora estamos conectando el Solatube."</p>
+                        <p><span class="body-text">PASO 3:</span> "Acabando de dejarlo bien puesto."</p>
+                        <p><span class="body-text">PASO 4:</span> "Fíjate cómo funciona." (Subir al tejado) "Por aquí entra la luz..."</p>
+                        <p><span class="body-text">RESULTADO:</span> "Y ahora esto es lo más excepcional. Por aquí sale, fíjate cómo ambienta una zona que antes..." (mostrar el ANTES) "...estaba totalmente oscura."</p>
+                        <p><span class="cta">CTA:</span> "Si te interesa tener este producto, escribe la palabra <strong>SOLATUBE</strong> aquí debajo."</p>
+                    </div>
+                    <span class="tag urgent">PRIORIDAD MÁXIMA</span>
+                    <span class="tag growth">2x por semana</span>
+                </div>
+
+                <div class="viral-card">
+                    <div class="viral-number">02</div>
+                    <h4>Viral de Autoridad: "¿Cuánto Cuesta un Solatube?"</h4>
+                    <p>Contenido de autoridad para complementar los virales. Se graba en un tejado con un Solatube ya instalado, abriendo y explicando el producto.</p>
+                    <div class="script-box" style="margin-top: 16px;">
+                        <p><span class="hook">HOOK:</span> "¿Cuánto cuesta un Solatube?"</p>
+                        <p><span class="body-text">CUERPO:</span> (En un tejado, cogiendo el Solatube y abriéndolo) "La verdad es que lo que cuesta un Solatube va en torno a los 1.600€ hasta lo que pida el cliente, pero gracias a esto no vas a tener ningún coste eléctrico en ese espacio muerto que tienes en tu casa..."</p>
+                        <p><span class="body-text">EXPLICACIÓN:</span> Beneficios, ahorro, cómo funciona el sistema de espejos.</p>
+                        <p><span class="cta">CTA:</span> Escribe <strong>SOLATUBE</strong> para más info.</p>
+                    </div>
+                    <span class="tag important">CONTENIDO DE AUTORIDAD</span>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <div class="card-icon teal">&#128161;</div>
+                    <div>
+                        <h3>Viral de Referencia Identificado en la Reunión</h3>
+                        <p>Adrián mostró un video <strong>hiperviral de placas solares con 50.000+ likes</strong> en TikTok/Instagram. El creador estaba sentado en su cuarto (ni siquiera en obra) hablando de "mi experiencia con placas solares". La clave: <strong>el hook es lo que lo hace viral, no la producción</strong>. También se identificó otro viral con el hook: "¿Quieres luz gratis? ¿Tienes que pagarle a una empresa? Cómprate un reflector con panel solar, porque el sol es gratis." Este hook se adapta perfectamente al Solatube.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon yellow">&#127916;</div>
+                    <div>
+                        <h3>Herramienta para Vídeos Explicativos: Kling AI</h3>
+                        <p>Adrián recomienda usar <strong>Kling AI</strong> (escrito "Clink AI" en la reunión) para crear renders animados del Solatube. Se le pasa el manual de instrucciones o apartado técnico y genera un render que explica parte por parte lo que hay dentro del producto mientras tú hablas. "A la gente le vuelve loco."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Reglas de Viralización</h4>
+                <ul>
+                    <li><strong>Mínimo 2 virales/semana</strong> con la estructura del Viral Principal (hook + pasos + resultado + CTA).</li>
+                    <li>El <strong>hook</strong> es lo único que importa para la viralización. Copiar hooks validados de placas solares y adaptarlos a Solatube.</li>
+                    <li>Publicar desde el perfil personal <strong>Jonathan Solar</strong> (no desde la cuenta de empresa Voltaik).</li>
+                    <li>Publicar en <strong>TikTok + Instagram Reels</strong> simultáneamente.</li>
+                    <li>CTA siempre: <strong>"Escribe SOLATUBE"</strong> en comentarios.</li>
+                    <li>Grabar en la <strong>Casa Verde</strong> (64 Solatubes, showroom perfecto) cuando sea posible.</li>
+                    <li>Complementar con contenido de autoridad (explicaciones, precios, testimonios) pero el viral es la prioridad.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: EMBUDO DE VENTAS -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="embudo">
+            <div class="section-header">
+                <div class="section-number purple">4</div>
+                <h2 class="section-title">Embudo de Ventas y Anuncios</h2>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon purple">&#9889;</div>
+                    <div>
+                        <h3>Estructura del Embudo</h3>
+                        <p>El embudo completo será construido por Adrián junto a Amin (su equipo) utilizando la suscripción de <strong>Manus</strong> de Jonathan. El flujo es:</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Contenido Viral (Orgánico)</h4>
+                        <p>Reels virales en TikTok e Instagram con la estructura indicada. CTA: "Escribe SOLATUBE". Genera tráfico orgánico masivo.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Anuncios de Pago (Meta Ads)</h4>
+                        <p>Grabar anuncios específicos con guiones proporcionados por Adrián. Lanzar campañas desde Meta Ads. Presupuesto estimado: ~10€/día mínimo. "Mete 200€ y vende una placa solar, ya lo has amortizado."</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>VSL (Video Sales Letter)</h4>
+                        <p>Vídeo de venta largo que educa al cliente sobre el Solatube. Se graba siguiendo el guión paso a paso que Adrián proporcionará. Esto automatiza la educación del cliente.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Landing Page</h4>
+                        <p>Página de aterrizaje profesional construida por Adrián + Amin con Manus. Incluye VSL, formulario de contacto, financiación integrada.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>Automatización GoHighLevel → Odoo</h4>
+                        <p>Los leads entran por GoHighLevel (GHL). Se automatizan seguimientos. Cuando es un cierre real: si es paneles → Odoo de Voltaik. Si es cambio de tarifa → Odoo de Somni (comercializadora).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div class="step-content">
+                        <h4>Speed to Lead (5-15 min)</h4>
+                        <p>Proceso crítico: contactar al lead en los primeros 5-15 minutos. Si descuelgas, es para cerrar. Automatizar todo lo posible antes de la llamada.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>&#128176; Estrategia de Financiación: Nemuru</h3>
+                <p>Jonathan ya utiliza <a href="https://www.nemuru.com" target="_blank"><strong>Nemuru</strong></a>, una plataforma fintech de Barcelona que conecta con todos los bancos de la CIRBE española. Permite ofrecer financiación al cliente de forma instantánea: introduces los datos del cliente y en 24-48h tienes la aprobación. Ofrece financiación con y sin intereses, hasta 10 años. Jonathan tiene contacto directo con el CEO. Esto se integra en la landing page y en el proceso de venta para eliminar la objeción de precio.</p>
+            </div>
+
+            <div class="info-box">
+                <h4>Guiones que Adrián Proporcionará</h4>
+                <ul>
+                    <li><strong>Guión de Anuncios</strong> — Paso a paso para grabar los anuncios de Meta Ads (Solatube + Fotovoltaica).</li>
+                    <li><strong>Guión de VSL</strong> — Video Sales Letter completo para la landing page. Educa al cliente sobre el producto.</li>
+                    <li><strong>Guión de Reels Virales</strong> — Estructura hook + pasos + resultado + CTA para contenido orgánico.</li>
+                    <li><strong>Guión Speed to Lead</strong> — Script de llamada para contactar leads en los primeros 5-15 minutos.</li>
+                    <li><strong>Guión de Venta</strong> — Script completo para cerrar la venta por teléfono o presencial.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: MARCA PERSONAL E INSTAGRAM -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="marca">
+            <div class="section-header">
+                <div class="section-number teal">5</div>
+                <h2 class="section-title">Marca Personal e Instagram</h2>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon pink">&#128241;</div>
+                    <div>
+                        <h3>Transformación del Perfil de Instagram</h3>
+                        <p>Jonathan debe convertir su perfil personal de Instagram en una marca profesional. Todo el contenido se publica desde <strong>Jonathan</strong>, no desde las cuentas de empresa (Voltaik o Somni).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Cambiar nombre a "Jonathan Solar"</h4>
+                        <p>Igual que en TikTok (donde ya creó "Solar con Jonathan"). Un nombre que la gente identifique inmediatamente con energía solar.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Ocultar posts personales no profesionales</h4>
+                        <p>No eliminar, solo ocultar. Quitar historias destacadas de viajes/países. Empezar con un perfil limpio y profesional.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Actualizar biografía</h4>
+                        <p>Incluir: "Todo sobre energía solar" + algo diferenciador como "Distribuyo un producto único en el mundo para ahorrar el 100% de la luz" o "Reduce tu factura eléctrica hasta el 80%".</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Publicar contenido profesional</h4>
+                        <p>Virales de Solatube (2/semana mínimo) + contenido de autoridad sobre fotovoltaica + testimonios + instalaciones. Todo desde Jonathan, no desde marca corporativa.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>Estructura de Perfiles</h4>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Plataforma</th>
+                            <th>Nombre</th>
+                            <th>Uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Instagram</td>
+                            <td><strong>Jonathan Solar</strong> (perfil personal convertido)</td>
+                            <td>Marca personal. Todo el contenido viral y profesional sale de aquí.</td>
+                        </tr>
+                        <tr>
+                            <td>TikTok</td>
+                            <td><strong>Solar con Jonathan</strong></td>
+                            <td>Mismo contenido viral. Ya creado.</td>
+                        </tr>
+                        <tr>
+                            <td>Instagram (empresa)</td>
+                            <td>Voltaik</td>
+                            <td>Solo para colaboraciones puntuales. No publicar contenido viral aquí.</td>
+                        </tr>
+                        <tr>
+                            <td>Instagram (empresa)</td>
+                            <td>Somni (comercializadora)</td>
+                            <td>Perfil corporativo. No para contenido viral.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 6: RECLUTAMIENTO Y EQUIPO COMERCIAL -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="reclutamiento">
+            <div class="section-header">
+                <div class="section-number pink">6</div>
+                <h2 class="section-title">Reclutamiento y Equipo Comercial</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>&#128640; La Clave del Escalado (por Sergio Rodríguez)</h3>
+                <p>Sergio fue claro: "Si tú filtras, llamas y de 60 contratas a un buen comercial, acabas de multiplicar. Porque ahora ese va a llamar al cliente." La escalada real no es que Jonathan venda más, sino que Jonathan <strong>reclute comerciales</strong> que vendan por él. El mismo sistema que se usa para captar clientes se usa para captar comerciales.</p>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon orange">&#128188;</div>
+                        <div>
+                            <h3>Modelo Comercial Recomendado</h3>
+                        </div>
+                    </div>
+                    <p><strong>100% a comisión</strong>, sin sueldo base. Sergio y Adrián coinciden: "Si fuese por mí, no pondría ni base." El comercial gana de lo que vende. Esto elimina el riesgo de costes fijos y atrae a gente realmente motivada.</p>
+                    <p style="margin-top: 12px;"><strong>Expectativa realista:</strong> De cada 70 comerciales que pruebes, 1 será competente. "No digas venga, prueba uno. Prueba con 70."</p>
+                    <span class="tag revenue">SIN SUELDO BASE</span>
+                    <span class="tag growth">SOLO COMISIÓN</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon teal">&#128736;</div>
+                        <div>
+                            <h3>Sistema de Reclutamiento</h3>
+                        </div>
+                    </div>
+                    <p>Usar el <strong>mismo sistema de captación de clientes</strong> para captar comerciales. Vídeos, anuncios, embudo. "Oye, ¿quieres dedicarte a esto?" Filtrar constantemente. Reuniones diarias con comerciales. Nunca parar de buscar.</p>
+                    <p style="margin-top: 12px;">Sergio proporcionará: <strong>plantilla de propuesta comercial</strong>, <strong>guión de reclutamiento</strong>, y <strong>estructura de oferta</strong> para que Jonathan la rellene.</p>
+                    <span class="tag important">PLANTILLAS INCLUIDAS</span>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <h4>Estrategia "Meter la Pata" (Cross-Selling)</h4>
+                <p style="margin-bottom: 12px;">Concepto clave de la reunión: <strong>"La clave es poner la pata. Da igual lo que hagas, pero al que le pones una pata ya está dentro."</strong></p>
+                <ul>
+                    <li><strong>Cargador eléctrico (800€)</strong> → Producto de entrada con poco margen → Luego vendes fotovoltaica (ticket alto).</li>
+                    <li><strong>Solatube (1.600€)</strong> → Producto de entrada → Luego vendes paneles solares + cambio de comercializadora.</li>
+                    <li><strong>Mantenimiento anual</strong> → Visita al cliente → "¿Has pensado en paneles? ¿Cuánto pagas de luz?"</li>
+                    <li><strong>Comercializadora</strong> → Factura mensual → Relación continua → Cross-sell de todo lo demás.</li>
+                    <li>Ejemplo real: campaña agresiva de cargadores a 800€ sin margen → clientes luego compran fotovoltaica (ticket mucho más alto).</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon yellow">&#128218;</div>
+                    <div>
+                        <h3>Base de Datos de 25.000 Clientes de Jordi</h3>
+                        <p>Acción inmediata: hablar con Jordi y solicitar la base de datos de los 25.000 compradores de Solatube. Ofrecer mantenimiento a 250€. Poner comerciales a llamar. De esos 250€, dar el 25% a Jordi (como ya hace). Cada visita de mantenimiento es una oportunidad de vender fotovoltaica, cambio de comercializadora, etc.</p>
+                    </div>
+                </div>
+                <span class="tag urgent">ACCIÓN INMEDIATA</span>
+                <span class="tag revenue">25.000 CLIENTES</span>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 7: HERRAMIENTAS Y PLATAFORMAS -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="herramientas">
+            <div class="section-header">
+                <div class="section-number purple">7</div>
+                <h2 class="section-title">Herramientas y Plataformas</h2>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple">&#128640;</div>
+                        <div>
+                            <h3><a href="https://focusconsultor.com" target="_blank">Focus Consultor</a></h3>
+                        </div>
+                    </div>
+                    <p>Plataforma de implementación de Lucenathor. Panel personal con calendario para agendar sesiones: lanzamiento de anuncios, landing pages, viralización, CRM. Los consultores supervisan todo el proceso. Jonathan ya tiene cuenta creada.</p>
+                    <span class="tag important">YA TIENE CUENTA</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon teal">&#128176;</div>
+                        <div>
+                            <h3><a href="https://www.nemuru.com" target="_blank">Nemuru</a></h3>
+                        </div>
+                    </div>
+                    <p>Plataforma fintech de Barcelona para ofrecer financiación al cliente. Conecta con todos los bancos de la CIRBE española. Aprobación en 24-48h. Financiación con/sin intereses hasta 10 años. Jonathan tiene contacto con el CEO.</p>
+                    <span class="tag growth">FINANCIACIÓN INTEGRADA</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon pink">&#129302;</div>
+                        <div>
+                            <h3>Manus (IA)</h3>
+                        </div>
+                    </div>
+                    <p>Herramienta de IA que Adrián recomienda para construir el embudo de ventas y la landing page. Jonathan debe suscribirse (~20-30€/mes). Adrián y Amin usarán la suscripción de Jonathan para construir todo el embudo.</p>
+                    <span class="tag urgent">SUSCRIBIRSE YA</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon yellow">&#128187;</div>
+                        <div>
+                            <h3>GoHighLevel (GHL)</h3>
+                        </div>
+                    </div>
+                    <p>CRM y plataforma de automatización. Toda la captación y gestión de leads desde Jonathan pasa por GHL. Automatización de seguimientos, emails, SMS. Cuando un lead es un cierre real, se pasa a Odoo (Voltaik o Somni).</p>
+                    <span class="tag important">CRM PRINCIPAL</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon orange">&#128203;</div>
+                        <div>
+                            <h3>Odoo</h3>
+                        </div>
+                    </div>
+                    <p>ERP actual de Jonathan para gestión interna. Se conectará con GoHighLevel: leads cerrados de fotovoltaica → Odoo Voltaik. Leads de cambio de tarifa → Odoo Somni (comercializadora).</p>
+                    <span class="tag growth">INTEGRACIÓN GHL→ODOO</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon teal">&#128179;</div>
+                        <div>
+                            <h3>Stripe</h3>
+                        </div>
+                    </div>
+                    <p>Para cobrar el mantenimiento anual de Solatube. Configurar pago diferido: 0€ al momento, cobro automático a los 365 días. Permite crear recurrencia sin fricción.</p>
+                    <span class="tag revenue">PAGOS RECURRENTES</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 8: CHECKLIST DE TAREAS -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="tareas">
+            <div class="section-header">
+                <div class="section-number teal">8</div>
+                <h2 class="section-title">Checklist de Tareas para Jonathan</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>&#127919; Los "Deberes" de Adrián</h3>
+                <p>"Los deberes que yo te doy es el documento que te pase. Vas a tener un paso a paso para grabarte los anuncios y también para hacer el VSL." — Adrián Lucena</p>
+            </div>
+
+            <div class="info-box">
+                <h4>Tareas Inmediatas (Prioridad Alta)</h4>
+                <ul class="checklist">
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Suscribirse a Manus</strong> (~20-30€/mes). Adrián y Amin lo usarán para construir tu landing page y embudo de ventas.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Cambiar nombre de Instagram</strong> a "Jonathan Solar" o similar. Ocultar posts personales no profesionales. Actualizar biografía con propuesta de valor.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Grabar los 2 primeros Reels virales de Solatube</strong> con la estructura: Hook ("¿Quieres luz gratis sin pagar a ninguna empresa?") + Pasos de instalación + Resultado final + CTA ("Escribe SOLATUBE").</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Grabar el VSL</strong> (Video Sales Letter) siguiendo el guión que Adrián proporcionará. Este vídeo educa al cliente y se coloca en la landing page.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Grabar los anuncios</strong> para Meta Ads siguiendo los guiones proporcionados. Cuando estén grabados y editados, agendar sesión en Focus Consultor → Calendario → Anuncios.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Enviar a Adrián/Amin</strong> las especificaciones técnicas del Solatube y el VSL grabado para que construyan la landing page.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Tareas de Estructura Comercial (Sergio)</h4>
+                <ul class="checklist">
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Rellenar las plantillas de Sergio:</strong> guiones de Speed to Lead, guión de venta, propuesta/oferta comercial, documento de reclutamiento de comerciales.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Definir y documentar la oferta de mantenimiento anual Solatube.</strong> Precio acabado en 7 (97€, 107€, 117€). Incluir: revisión de cúpula, limpieza, verificación. Configurar cobro por Stripe (0€ inicio, cobro a 365 días).</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Hablar con Jordi</strong> para solicitar la base de datos de 25.000 clientes Solatube. Proponer: "Dame la base de datos, voy a llamar para ofrecer mantenimiento a 250€. Te doy el 25%."</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Iniciar captación de comerciales.</strong> Usar el mismo sistema de captación de clientes. Modelo 100% a comisión. Expectativa: de 70, 1 será bueno.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Configurar automatización GoHighLevel → Odoo.</strong> Leads de fotovoltaica → Odoo Voltaik. Leads de cambio de tarifa → Odoo Somni.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Definir proceso Speed to Lead (5-15 min).</strong> Automatizar todo lo posible antes de la llamada. Si descuelgas, es para cerrar.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>Tareas de Medio Plazo</h4>
+                <ul class="checklist">
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Ir a la Casa Verde</strong> (64 Solatubes) para grabar contenido de showroom. Proyecto espectacular: espacio 100% autónomo, sin red ni agua de estado.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Cerrar el desarrollo de la batería integrada Solatube</strong> (4 meses restantes de prueba piloto). Producto propio con margen del 80%+.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Negociar con Jordi</strong> para comprar directo a fábrica cuando haya volumen suficiente. Pasar de 65% a 80% de margen.</div>
+                    </li>
+                    <li>
+                        <div class="check-box"></div>
+                        <div><strong>Agendar sesiones en Focus Consultor</strong> para: lanzamiento de anuncios, landing page, viralización (supervisión de consultores), conexión CRM (Odoo + Meta Ads).</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 9: RESUMEN EJECUTIVO -->
+        <div class="divider"></div>
+        <section class="section fade-in" id="resumen">
+            <div class="section-header">
+                <div class="section-number pink">9</div>
+                <h2 class="section-title">Resumen Ejecutivo</h2>
+            </div>
+
+            <div class="highlight-box">
+                <h3>&#128640; La Visión</h3>
+                <p>Jonathan tiene un producto único (Solatube) con márgenes excepcionales (65-80%), un mercado sin competencia digital, y una base de 25.000 clientes existentes sin explotar. La estrategia es clara: <strong>marca personal + virales + embudo digital + equipo comercial a comisión</strong>. El Solatube es el producto de entrada que abre la puerta a fotovoltaica, comercializadora, aerotermia y mantenimiento recurrente. "Si tú consigues hacer este producto viral, ese mismo reel te va a traer 20 ventas." — Adrián Lucena</p>
+            </div>
+
+            <div class="info-box">
+                <h4>Participantes de la Reunión</h4>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th>Responsabilidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Adrián Lucena (Lucenathor)</strong></td>
+                            <td>Consultor de Marketing / CEO Focus</td>
+                            <td>Estrategia de virales, guiones VSL/anuncios, landing page, embudo de ventas. Email: adrian@lucenathor.com</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sergio Rodríguez Aguilera</strong></td>
+                            <td>Consultor de Ventas</td>
+                            <td>Estructura comercial, plantillas de venta, reclutamiento de comerciales, oferta comercial, Speed to Lead.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jonathan Sielva Gonzalez</strong></td>
+                            <td>CEO Voltaik / Somni / Distribuidor Solatube</td>
+                            <td>Ejecutar el plan: grabar contenido, rellenar plantillas, reclutar comerciales, escalar el negocio.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Amin</strong> (mencionado)</td>
+                            <td>Equipo de Adrián</td>
+                            <td>Construcción técnica de la landing page junto a Adrián.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jordi</strong> (mencionado)</td>
+                            <td>Socio / Proveedor Solatube</td>
+                            <td>Almacén, logística, base de datos de 25.000 clientes. Socio clave para escalar.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <h4>Casos de Éxito Mencionados (Referencia)</h4>
+                <ul>
+                    <li><strong>"Andy y Lucas"</strong> — Clientes de Lucenathor en placas solares. Llegaron a 200.000€/mes.</li>
+                    <li><strong>Christopher</strong> — Otro cliente de placas solares. 200.000€/mes. Amigo personal de Adrián.</li>
+                    <li><strong>"El hermano de Javi, el de las zapas" (Jorge)</strong> — También en el programa, sector placas solares.</li>
+                    <li>Todos estos casos demuestran que el modelo funciona en el sector solar. La diferencia con Jonathan es que tiene un producto adicional (Solatube) sin competencia digital.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="divider"></div>
+        <div class="footer">
+            <p>Documento generado a partir de la reunión de consultoría del 19 de marzo de 2026</p>
+            <p style="margin-top: 8px;"><a href="https://focusconsultor.com" target="_blank">Focus Consultor</a> &middot; <a href="https://lucenathor.com" target="_blank">Lucenathor</a></p>
+            <p style="margin-top: 16px; font-size: 11px; color: var(--text-muted);">Reunión grabada vía Fathom &middot; Duración: 139 minutos &middot; Documento confidencial para uso interno</p>
+        </div>
+    </div>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Fade in animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
