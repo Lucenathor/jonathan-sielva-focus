@@ -3,32 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan de Implementación — Jonathan Sielva | FOCUS x Lucenathor</title>
+    <title>Plan de Implementacion — Jonathan Sielva | FOCUS Consulting Group</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a2e;
-            --bg-card-hover: #1f1f35;
-            --accent: #6c5ce7;
-            --accent-light: #a29bfe;
-            --accent-glow: rgba(108, 92, 231, 0.3);
-            --success: #00cec9;
-            --warning: #fdcb6e;
-            --danger: #e17055;
-            --text-primary: #f5f5f7;
-            --text-secondary: #a0a0b8;
-            --text-muted: #6b6b80;
-            --border: rgba(255,255,255,0.06);
-            --gradient-1: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            --gradient-2: linear-gradient(135deg, #00cec9, #55efc4);
-            --gradient-3: linear-gradient(135deg, #fd79a8, #e84393);
+            --bg-primary: #0b1120;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-card-hover: rgba(30, 41, 59, 0.8);
+            --accent: #b8a04c;
+            --accent-light: #d4c06a;
+            --accent-glow: rgba(184, 160, 76, 0.3);
+            --blue: #3b82f6;
+            --blue-light: #60a5fa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(255,255,255,0.08);
+            --gold-gradient: linear-gradient(135deg, #b8a04c, #d4c06a, #b8a04c);
+            --blue-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+            --glass: rgba(255,255,255,0.03);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -38,325 +42,585 @@
             overflow-x: hidden;
         }
 
-        .bg-grid {
+        /* === ANIMATED BACKGROUND === */
+        .bg-aurora {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(0, 206, 201, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(253, 121, 168, 0.05) 0%, transparent 50%);
-            z-index: 0; pointer-events: none;
+            z-index: 0; pointer-events: none; overflow: hidden;
         }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        .bg-aurora::before {
+            content: ''; position: absolute; width: 200%; height: 200%;
+            top: -50%; left: -50%;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(184, 160, 76, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            animation: auroraMove 20s ease-in-out infinite;
+        }
 
-        .hero { padding: 80px 0 60px; text-align: center; position: relative; }
+        @keyframes auroraMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, -2%) rotate(1deg); }
+            50% { transform: translate(-1%, 3%) rotate(-1deg); }
+            75% { transform: translate(3%, 1%) rotate(0.5deg); }
+        }
+
+        /* Floating particles */
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+        .particle {
+            position: absolute; width: 3px; height: 3px; background: var(--accent);
+            border-radius: 50%; opacity: 0;
+            animation: floatParticle 8s ease-in-out infinite;
+        }
+
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1); }
+        }
+
+        /* === NAVIGATION === */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(11, 17, 32, 0.8); backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border); z-index: 999; padding: 12px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav.scrolled { background: rgba(11, 17, 32, 0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0 32px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .nav-logo { height: 36px; opacity: 0.9; transition: opacity 0.3s; }
+        .nav-logo:hover { opacity: 1; }
+
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            font-size: 13px; font-weight: 500; color: var(--text-muted);
+            text-decoration: none; transition: all 0.3s; position: relative;
+            letter-spacing: 0.3px;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0;
+            height: 2px; background: var(--gold-gradient); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent-light); }
+        .nav-links a:hover::after { width: 100%; }
+
+        @media (max-width: 900px) { .nav-links { display: none; } }
+
+        /* === PROGRESS BAR === */
+        .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 1001; }
+        .progress-bar { height: 100%; background: var(--gold-gradient); width: 0%; transition: width 0.15s; box-shadow: 0 0 10px var(--accent-glow); }
+
+        /* === CONTAINER === */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+        /* === HERO === */
+        .hero { padding: 140px 0 80px; text-align: center; position: relative; }
+
+        .hero-logo { width: 280px; margin: 0 auto 40px; opacity: 0; animation: heroFadeIn 1s ease 0.2s forwards; }
+        .hero-logo img { width: 100%; height: auto; filter: drop-shadow(0 4px 20px rgba(184, 160, 76, 0.2)); }
+
+        .hero-divider {
+            width: 80px; height: 2px; background: var(--gold-gradient);
+            margin: 0 auto 32px; opacity: 0; animation: heroFadeIn 1s ease 0.4s forwards;
+        }
 
         .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(108, 92, 231, 0.15); border: 1px solid rgba(108, 92, 231, 0.3);
-            padding: 8px 20px; border-radius: 50px; font-size: 13px; font-weight: 600;
-            color: var(--accent-light); margin-bottom: 28px; letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 10px;
+            background: rgba(184, 160, 76, 0.1); border: 1px solid rgba(184, 160, 76, 0.25);
+            padding: 10px 24px; border-radius: 50px; font-size: 12px; font-weight: 600;
+            color: var(--accent-light); margin-bottom: 32px; letter-spacing: 1.5px;
+            text-transform: uppercase; opacity: 0; animation: heroFadeIn 1s ease 0.6s forwards;
         }
 
         .hero-badge::before {
             content: ''; width: 8px; height: 8px; background: var(--accent);
             border-radius: 50%; animation: pulse 2s infinite;
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 12px var(--accent-glow); }
+            50% { opacity: 0.5; transform: scale(1.5); box-shadow: 0 0 24px var(--accent-glow); }
         }
 
         .hero h1 {
-            font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.2rem, 5vw, 3.5rem);
-            font-weight: 800; line-height: 1.15; margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff 0%, #a29bfe 50%, #00cec9 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 700; line-height: 1.15; margin-bottom: 24px;
+            color: #fff; opacity: 0; animation: heroSlideUp 1s ease 0.8s forwards;
         }
 
-        .hero p { font-size: 18px; color: var(--text-secondary); max-width: 650px; margin: 0 auto 16px; }
+        .hero h1 span {
+            background: var(--gold-gradient); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+        }
 
-        .hero-meta { display: flex; justify-content: center; gap: 32px; margin-top: 32px; flex-wrap: wrap; }
+        .hero p {
+            font-size: 18px; color: var(--text-secondary); max-width: 600px;
+            margin: 0 auto 16px; opacity: 0; animation: heroSlideUp 1s ease 1s forwards;
+        }
 
-        .hero-meta-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-muted); }
-        .hero-meta-item svg { width: 18px; height: 18px; color: var(--accent-light); }
+        .hero-meta {
+            display: flex; justify-content: center; gap: 40px; margin-top: 40px;
+            flex-wrap: wrap; opacity: 0; animation: heroFadeIn 1s ease 1.2s forwards;
+        }
 
-        .section { padding: 48px 0; }
-        .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+        .hero-meta-item {
+            display: flex; align-items: center; gap: 10px; font-size: 14px;
+            color: var(--text-muted); font-weight: 500;
+        }
+
+        .hero-meta-item svg { width: 18px; height: 18px; color: var(--accent); }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+
+        @keyframes heroSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === SECTIONS === */
+        .section { padding: 60px 0; }
+
+        .section-header {
+            display: flex; align-items: center; gap: 20px; margin-bottom: 40px;
+        }
 
         .section-number {
             display: flex; align-items: center; justify-content: center;
-            width: 48px; height: 48px; border-radius: 14px;
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; flex-shrink: 0;
+            width: 52px; height: 52px; border-radius: 16px;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px;
+            flex-shrink: 0; position: relative; overflow: hidden;
         }
 
-        .section-number.purple { background: var(--gradient-1); }
-        .section-number.teal { background: var(--gradient-2); color: #0a0a0f; }
-        .section-number.pink { background: var(--gradient-3); }
+        .section-number::before {
+            content: ''; position: absolute; inset: 0;
+            background: inherit; filter: blur(0); transition: filter 0.3s;
+        }
 
-        .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+        .section-number.gold { background: var(--gold-gradient); color: #0b1120; }
+        .section-number.blue { background: var(--blue-gradient); color: #fff; }
+        .section-number.green { background: linear-gradient(135deg, #10b981, #34d399); color: #0b1120; }
 
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700;
+        }
+
+        /* === CARDS === */
         .card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
-            padding: 28px; margin-bottom: 20px; transition: all 0.3s ease;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 32px; margin-bottom: 24px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px); position: relative; overflow: hidden;
+        }
+
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 1px; background: linear-gradient(90deg, transparent, rgba(184, 160, 76, 0.3), transparent);
+            opacity: 0; transition: opacity 0.5s;
         }
 
         .card:hover {
-            background: var(--bg-card-hover); border-color: rgba(108, 92, 231, 0.2);
-            transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            background: var(--bg-card-hover); border-color: rgba(184, 160, 76, 0.15);
+            transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
-        .card-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+        .card:hover::before { opacity: 1; }
+
+        .card-header { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 18px; }
 
         .card-icon {
-            width: 44px; height: 44px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+            width: 48px; height: 48px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0; transition: transform 0.3s;
         }
 
-        .card-icon.purple { background: rgba(108, 92, 231, 0.15); }
-        .card-icon.teal { background: rgba(0, 206, 201, 0.15); }
-        .card-icon.pink { background: rgba(253, 121, 168, 0.15); }
-        .card-icon.yellow { background: rgba(253, 203, 110, 0.15); }
-        .card-icon.orange { background: rgba(225, 112, 85, 0.15); }
+        .card:hover .card-icon { transform: scale(1.1) rotate(5deg); }
 
-        .card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-        .card p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; }
+        .card-icon.gold { background: rgba(184, 160, 76, 0.12); }
+        .card-icon.blue { background: rgba(59, 130, 246, 0.12); }
+        .card-icon.green { background: rgba(16, 185, 129, 0.12); }
+        .card-icon.red { background: rgba(239, 68, 68, 0.12); }
+        .card-icon.purple { background: rgba(139, 92, 246, 0.12); }
 
-        .card .tag {
-            display: inline-block; padding: 4px 12px; border-radius: 6px;
-            font-size: 12px; font-weight: 600; margin-top: 12px; margin-right: 6px;
+        .card h3 { font-family: 'Space Grotesk', sans-serif; font-size: 21px; font-weight: 700; margin-bottom: 6px; }
+        .card p { color: var(--text-secondary); font-size: 15px; line-height: 1.8; }
+
+        .tag {
+            display: inline-block; padding: 5px 14px; border-radius: 8px;
+            font-size: 11px; font-weight: 700; margin-top: 14px; margin-right: 8px;
+            letter-spacing: 0.5px; text-transform: uppercase;
         }
 
-        .tag.urgent { background: rgba(225, 112, 85, 0.15); color: #e17055; }
-        .tag.important { background: rgba(108, 92, 231, 0.15); color: #a29bfe; }
-        .tag.growth { background: rgba(0, 206, 201, 0.15); color: #00cec9; }
-        .tag.revenue { background: rgba(253, 203, 110, 0.15); color: #fdcb6e; }
+        .tag.urgent { background: rgba(239, 68, 68, 0.12); color: #f87171; }
+        .tag.important { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+        .tag.growth { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+        .tag.revenue { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
 
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        /* === GRID === */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
 
+        /* === INFO BOX === */
         .info-box {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 28px; margin-bottom: 20px;
+            border-radius: 20px; padding: 32px; margin-bottom: 24px;
+            backdrop-filter: blur(10px);
         }
 
         .info-box h4 {
             font-family: 'Space Grotesk', sans-serif; font-size: 16px;
-            font-weight: 600; margin-bottom: 12px; color: var(--accent-light);
+            font-weight: 600; margin-bottom: 16px; color: var(--accent-light);
+            letter-spacing: 0.3px;
         }
 
         .info-box p, .info-box li { color: var(--text-secondary); font-size: 15px; }
         .info-box ul { list-style: none; padding: 0; }
 
         .info-box ul li {
-            padding: 8px 0; border-bottom: 1px solid var(--border);
-            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-start; gap: 12px;
+            transition: all 0.3s;
         }
 
+        .info-box ul li:hover { padding-left: 8px; }
         .info-box ul li:last-child { border-bottom: none; }
         .info-box ul li::before { content: '\2192'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
 
+        /* === VIRAL CARDS === */
         .viral-card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 24px; position: relative; overflow: hidden;
+            border-radius: 20px; padding: 28px; position: relative; overflow: hidden;
+            backdrop-filter: blur(10px); transition: all 0.5s;
         }
 
         .viral-card::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0;
-            height: 3px; background: var(--gradient-3);
+            height: 3px; background: var(--gold-gradient);
         }
+
+        .viral-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
 
         .viral-card .viral-number {
-            font-family: 'Space Grotesk', sans-serif; font-size: 48px; font-weight: 800;
-            background: var(--gradient-1); -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 12px;
+            font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+            line-height: 1; margin-bottom: 16px;
         }
 
-        .viral-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-        .viral-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+        .viral-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 700; margin-bottom: 12px; }
+        .viral-card p { color: var(--text-secondary); font-size: 14px; line-height: 1.8; }
 
-        .step { display: flex; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--border); }
-        .step:last-child { border-bottom: none; }
-
-        .step-num {
-            width: 36px; height: 36px; border-radius: 10px; background: var(--gradient-1);
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; flex-shrink: 0;
+        /* === SCRIPT BOX === */
+        .script-box {
+            background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 16px;
+            padding: 28px; margin: 20px 0; font-size: 14px; line-height: 2;
+            color: var(--text-secondary); position: relative; overflow: hidden;
         }
 
-        .step-content h4 { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; margin-bottom: 6px; }
-        .step-content p { color: var(--text-secondary); font-size: 14px; }
-
-        .data-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-
-        .data-table th {
-            text-align: left; padding: 14px 16px; background: rgba(108, 92, 231, 0.1);
-            font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px;
-            text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-light);
-            border-bottom: 1px solid var(--border);
+        .script-box::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+            background: var(--gold-gradient);
         }
 
-        .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-secondary); }
-        .data-table tr:hover td { background: rgba(108, 92, 231, 0.05); }
+        .script-box .hook { color: #f87171; font-weight: 700; font-size: 15px; }
+        .script-box .body-text { color: var(--text-primary); font-weight: 500; }
+        .script-box .cta { color: #34d399; font-weight: 700; font-size: 15px; }
+        .script-box .pain { color: #fb923c; font-weight: 600; }
+        .script-box .solution { color: #60a5fa; font-weight: 600; }
+        .script-box .scene { color: var(--text-muted); font-style: italic; font-size: 13px; }
 
+        /* === GUION LABEL === */
+        .guion-label {
+            display: inline-block; padding: 5px 16px; border-radius: 10px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; margin-bottom: 20px;
+        }
+
+        .guion-label.pain { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
+        .guion-label.vsl { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+        .guion-label.viral { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+
+        /* === HIGHLIGHT BOX === */
         .highlight-box {
-            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(0, 206, 201, 0.08));
-            border: 1px solid rgba(108, 92, 231, 0.2); border-radius: 16px; padding: 32px; margin: 24px 0;
+            background: linear-gradient(135deg, rgba(184, 160, 76, 0.08), rgba(59, 130, 246, 0.06));
+            border: 1px solid rgba(184, 160, 76, 0.15); border-radius: 20px;
+            padding: 36px; margin: 28px 0; position: relative; overflow: hidden;
+        }
+
+        .highlight-box::after {
+            content: ''; position: absolute; top: -50%; right: -50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(184, 160, 76, 0.05) 0%, transparent 70%);
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         .highlight-box h3 {
-            font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700;
-            margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+            font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700;
+            margin-bottom: 18px; display: flex; align-items: center; gap: 14px;
+            position: relative; z-index: 1;
         }
 
-        .highlight-box p { color: var(--text-secondary); font-size: 15px; }
+        .highlight-box p { color: var(--text-secondary); font-size: 15px; position: relative; z-index: 1; line-height: 1.8; }
 
-        .checklist { list-style: none; padding: 0; }
-
-        .checklist li {
-            display: flex; align-items: flex-start; gap: 14px; padding: 14px 0;
-            border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text-secondary);
-        }
-
-        .checklist li:last-child { border-bottom: none; }
-
-        .check-box {
-            width: 22px; height: 22px; border: 2px solid var(--accent);
-            border-radius: 6px; flex-shrink: 0; margin-top: 2px;
-        }
-
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 48px 0; }
-
-        .footer { text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 13px; }
-        .footer a { color: var(--accent-light); text-decoration: none; }
-
-        a { color: var(--accent-light); text-decoration: none; transition: color 0.2s; }
-        a:hover { color: #fff; }
-
-        @media (max-width: 768px) {
-            .hero { padding: 48px 0 32px; }
-            .hero-meta { gap: 16px; }
-            .section { padding: 32px 0; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .card { padding: 20px; }
-        }
-
-        .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-        .script-box {
-            background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px;
-            padding: 24px; margin: 16px 0; font-family: 'Inter', monospace;
-            font-size: 14px; line-height: 1.8; color: var(--text-secondary);
-        }
-
-        .script-box .hook { color: #e17055; font-weight: 700; }
-        .script-box .body-text { color: var(--text-primary); }
-        .script-box .cta { color: #00cec9; font-weight: 700; }
-        .script-box .pain { color: #fd79a8; font-weight: 600; }
-        .script-box .solution { color: #55efc4; font-weight: 600; }
-        .script-box .scene { color: var(--text-muted); font-style: italic; font-size: 13px; }
-
-        .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 3px; z-index: 1000; }
-        .progress-bar { height: 100%; background: var(--gradient-1); width: 0%; transition: width 0.1s; }
-
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border); z-index: 999; padding: 14px 0;
-        }
-
-        .nav-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .nav-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: var(--text-primary); }
-        .nav-links { display: flex; gap: 24px; }
-        .nav-links a { font-size: 13px; font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
-        .nav-links a:hover { color: var(--text-primary); }
-
-        @media (max-width: 768px) { .nav-links { display: none; } }
-
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
+        /* === KPI === */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 28px 0; }
 
         .kpi-box {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 24px; text-align: center;
+            border-radius: 18px; padding: 28px; text-align: center;
+            backdrop-filter: blur(10px); transition: all 0.4s;
+            position: relative; overflow: hidden;
         }
 
+        .kpi-box::before {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 3px; background: var(--gold-gradient); transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        .kpi-box:hover { transform: translateY(-4px); }
+        .kpi-box:hover::before { transform: scaleX(1); }
+
         .kpi-value {
-            font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 800;
-            background: var(--gradient-1); -webkit-background-clip: text;
+            font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text;
             -webkit-text-fill-color: transparent; background-clip: text;
         }
 
-        .kpi-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .kpi-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; font-weight: 500; }
 
-        /* CTA Button */
-        .cta-section { text-align: center; padding: 60px 0; }
+        /* === DATA TABLE === */
+        .data-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+
+        .data-table th {
+            text-align: left; padding: 16px 18px; background: rgba(184, 160, 76, 0.08);
+            font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 1px; color: var(--accent-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 16px 18px; border-bottom: 1px solid var(--border);
+            font-size: 14px; color: var(--text-secondary); transition: all 0.3s;
+        }
+
+        .data-table tr:hover td { background: rgba(184, 160, 76, 0.04); padding-left: 22px; }
+
+        /* === STEPS === */
+        .step { display: flex; gap: 22px; padding: 28px 0; border-bottom: 1px solid var(--border); transition: all 0.3s; }
+        .step:last-child { border-bottom: none; }
+        .step:hover { padding-left: 8px; }
+
+        .step-num {
+            width: 40px; height: 40px; border-radius: 12px; background: var(--gold-gradient);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px;
+            flex-shrink: 0; color: #0b1120;
+        }
+
+        .step-content h4 { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .step-content p { color: var(--text-secondary); font-size: 14px; }
+
+        /* === CHECKLIST === */
+        .checklist { list-style: none; padding: 0; }
+
+        .checklist li {
+            display: flex; align-items: flex-start; gap: 16px; padding: 16px 0;
+            border-bottom: 1px solid var(--border); font-size: 15px;
+            color: var(--text-secondary); transition: all 0.3s;
+        }
+
+        .checklist li:hover { padding-left: 8px; }
+        .checklist li:last-child { border-bottom: none; }
+
+        .check-box {
+            width: 24px; height: 24px; border: 2px solid var(--accent);
+            border-radius: 8px; flex-shrink: 0; margin-top: 2px;
+            transition: all 0.3s; cursor: pointer;
+        }
+
+        .check-box:hover { background: rgba(184, 160, 76, 0.2); transform: scale(1.1); }
+
+        /* === CTA === */
+        .cta-section { text-align: center; padding: 80px 0; }
 
         .cta-button {
-            display: inline-flex; align-items: center; gap: 12px;
-            background: var(--gradient-1); color: #fff; padding: 18px 40px;
-            border-radius: 14px; font-family: 'Space Grotesk', sans-serif;
+            display: inline-flex; align-items: center; gap: 14px;
+            background: var(--gold-gradient); color: #0b1120; padding: 20px 48px;
+            border-radius: 16px; font-family: 'Space Grotesk', sans-serif;
             font-size: 18px; font-weight: 700; text-decoration: none;
-            transition: all 0.3s ease; border: none; cursor: pointer;
-            box-shadow: 0 4px 24px rgba(108, 92, 231, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none; cursor: pointer;
+            box-shadow: 0 4px 30px rgba(184, 160, 76, 0.3);
+            position: relative; overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 40px rgba(108, 92, 231, 0.6);
-            color: #fff;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 50px rgba(184, 160, 76, 0.5);
+            color: #0b1120;
         }
+
+        .cta-button:hover::before { left: 100%; }
 
         .cta-button svg { width: 22px; height: 22px; }
+        .cta-subtitle { color: var(--text-muted); font-size: 14px; margin-top: 20px; max-width: 500px; margin-left: auto; margin-right: auto; }
 
-        .cta-subtitle { color: var(--text-muted); font-size: 14px; margin-top: 16px; }
-
-        /* Guion section */
-        .guion-label {
-            display: inline-block; padding: 4px 14px; border-radius: 8px;
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1px; margin-bottom: 16px;
+        /* === DIVIDER === */
+        .divider {
+            height: 1px; margin: 60px 0; position: relative; overflow: hidden;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
         }
 
-        .guion-label.pain { background: rgba(253, 121, 168, 0.15); color: #fd79a8; }
-        .guion-label.vsl { background: rgba(108, 92, 231, 0.15); color: #a29bfe; }
-        .guion-label.viral { background: rgba(0, 206, 201, 0.15); color: #00cec9; }
+        .divider::after {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 50%; height: 100%; background: var(--gold-gradient);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -50%; } 100% { left: 150%; }
+        }
+
+        /* === FOOTER === */
+        .footer { text-align: center; padding: 60px 0; color: var(--text-muted); font-size: 13px; }
+        .footer a { color: var(--accent-light); text-decoration: none; transition: color 0.3s; }
+        .footer a:hover { color: #fff; }
+
+        a { color: var(--accent-light); text-decoration: none; transition: color 0.3s; }
+        a:hover { color: #fff; }
+
+        /* === SCROLL ANIMATIONS === */
+        .reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal-left {
+            opacity: 0; transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+        .reveal-right {
+            opacity: 0; transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+        .reveal-scale {
+            opacity: 0; transform: scale(0.9);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+        /* Staggered children */
+        .stagger-children > * {
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; opacity: 1; transform: translateY(0); }
+        .stagger-children.visible > *:nth-child(6) { transition-delay: 0.6s; opacity: 1; transform: translateY(0); }
+
+        /* === COUNTER ANIMATION === */
+        .count-up { display: inline-block; }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .hero { padding: 100px 0 48px; }
+            .hero-logo { width: 200px; }
+            .hero-meta { gap: 20px; }
+            .section { padding: 40px 0; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .card { padding: 24px; }
+            .container { padding: 0 20px; }
+            .cta-button { padding: 16px 32px; font-size: 16px; }
+        }
+
+        /* === GLOW TEXT === */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(184, 160, 76, 0.3);
+        }
+
+        /* === TYPING EFFECT === */
+        .typing-cursor::after {
+            content: '|'; animation: blink 1s step-end infinite; color: var(--accent);
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
-    <div class="bg-grid"></div>
+    <div class="bg-aurora"></div>
+
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Progress Bar -->
     <div class="progress-container">
         <div class="progress-bar" id="progressBar"></div>
     </div>
 
     <!-- Navigation -->
-    <nav class="nav">
+    <nav class="nav" id="navbar">
         <div class="nav-inner">
-            <div class="nav-logo">FOCUS x Jonathan</div>
+            <img src="logo-focus.png" alt="FOCUS Consulting Group" class="nav-logo">
             <div class="nav-links">
                 <a href="#contexto">Contexto</a>
                 <a href="#numeros">Numeros</a>
                 <a href="#virales">Virales</a>
-                <a href="#guion-anuncios">Guion Anuncios</a>
-                <a href="#guion-vsl">Guion VSL</a>
-                <a href="#guion-reels">Guion Reels</a>
+                <a href="#guion-anuncios">Anuncios</a>
+                <a href="#guion-vsl">VSL</a>
+                <a href="#guion-reels">Reels</a>
                 <a href="#marca">Marca</a>
                 <a href="#siguiente">Siguiente Paso</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero -->
     <div class="container">
-        <div class="hero" style="padding-top: 120px;">
-            <div class="hero-badge">DOCUMENTO DE IMPLEMENTACION</div>
-            <h1>Plan Estrategico para Jonathan Sielva</h1>
-            <p>Resumen completo de tu sesion de consultoria con Adrian Lucena (Lucenathor). Todo lo que necesitas para escalar tu negocio de energia solar y Solatube.</p>
-            
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-logo">
+                <img src="logo-focus.png" alt="FOCUS Consulting Group">
+            </div>
+            <div class="hero-divider"></div>
+            <div class="hero-badge">Documento de Implementacion</div>
+            <h1>Plan Estrategico para<br><span>Jonathan Sielva</span></h1>
+            <p>Resumen completo de tu sesion de consultoria. Todo lo que necesitas para escalar tu negocio de energia solar y Solatube.</p>
             <div class="hero-meta">
                 <div class="hero-meta-item">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -364,20 +628,20 @@
                 </div>
                 <div class="hero-meta-item">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    Adrian Lucena &middot; Jonathan Sielva
+                    FOCUS Consulting Group
                 </div>
             </div>
         </div>
 
-        <!-- SECCION 1: CONTEXTO DE LA EMPRESA -->
+        <!-- SECCION 1: CONTEXTO -->
         <div class="divider"></div>
-        <section class="section fade-in" id="contexto">
+        <section class="section reveal" id="contexto">
             <div class="section-header">
-                <div class="section-number purple">1</div>
+                <div class="section-number gold">1</div>
                 <h2 class="section-title">Contexto de la Empresa</h2>
             </div>
 
-            <div class="info-box">
+            <div class="info-box reveal">
                 <h4>Datos de Jonathan Sielva Gonzalez</h4>
                 <ul>
                     <li><strong>Ubicacion:</strong> Olot, La Garrocha (Girona, Cataluna). A 45 min de Francia, 1h20 de Barcelona.</li>
@@ -388,7 +652,7 @@
                 </ul>
             </div>
 
-            <div class="grid-2">
+            <div class="grid-2 stagger-children">
                 <div class="info-box">
                     <h4>Productos y Servicios</h4>
                     <ul>
@@ -408,7 +672,7 @@
                         <li>Solo existe 1 video en TikTok sobre Solatube (un venezolano con 30K views).</li>
                         <li>Margen actual: <strong>65%</strong> como revendedor. Potencial de <strong>80%</strong> comprando directo a fabrica.</li>
                         <li>Servicio 360 en energia: fotovoltaica + comercializadora + Solatube + cargadores + aerotermia.</li>
-                        <li>Proyecto referencia: <strong>Casa Verde</strong> — 64 Solatubes instalados, espacio 100% autonomo. Showroom perfecto para contenido.</li>
+                        <li>Proyecto referencia: <strong>Casa Verde</strong> — 64 Solatubes instalados, espacio 100% autonomo.</li>
                     </ul>
                 </div>
             </div>
@@ -416,20 +680,20 @@
 
         <!-- SECCION 2: NUMEROS CLAVE -->
         <div class="divider"></div>
-        <section class="section fade-in" id="numeros">
+        <section class="section reveal" id="numeros">
             <div class="section-header">
-                <div class="section-number teal">2</div>
+                <div class="section-number blue">2</div>
                 <h2 class="section-title">Numeros Clave del Solatube</h2>
             </div>
 
-            <div class="kpi-grid">
+            <div class="kpi-grid stagger-children">
                 <div class="kpi-box">
                     <div class="kpi-value">1.600&#8364;</div>
                     <div class="kpi-label">Precio venta (con IVA)</div>
                 </div>
                 <div class="kpi-box">
                     <div class="kpi-value">~400&#8364;</div>
-                    <div class="kpi-label">Coste (producto + envio + gestion)</div>
+                    <div class="kpi-label">Coste total por unidad</div>
                 </div>
                 <div class="kpi-box">
                     <div class="kpi-value">1.200&#8364;</div>
@@ -441,74 +705,47 @@
                 </div>
             </div>
 
-            <div class="info-box" style="margin-top: 20px;">
+            <div class="info-box reveal">
                 <h4>Desglose Financiero</h4>
                 <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Importe</th>
-                            <th>Notas</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Concepto</th><th>Importe</th><th>Notas</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td>Precio de venta (con IVA)</td>
-                            <td><strong>1.600&#8364;</strong></td>
-                            <td>Precio medio ultimas 4-5 ventas</td>
-                        </tr>
-                        <tr>
-                            <td>Coste producto + logistica</td>
-                            <td><strong>~400&#8364;</strong></td>
-                            <td>Incluye envio, planos, accesorios</td>
-                        </tr>
-                        <tr>
-                            <td>Margen bruto</td>
-                            <td><strong>~1.200&#8364;</strong></td>
-                            <td>Antes de impuestos</td>
-                        </tr>
-                        <tr>
-                            <td>Margen potencial (compra directa)</td>
-                            <td><strong>~80%</strong></td>
-                            <td>Comprando directo a fabrica</td>
-                        </tr>
-                        <tr>
-                            <td>Base de clientes existentes</td>
-                            <td><strong>25.000</strong></td>
-                            <td>Oportunidad de mantenimiento y cross-sell</td>
-                        </tr>
+                        <tr><td>Precio de venta (con IVA)</td><td><strong>1.600&#8364;</strong></td><td>Precio medio ultimas 4-5 ventas</td></tr>
+                        <tr><td>Coste producto + logistica</td><td><strong>~400&#8364;</strong></td><td>Incluye envio, planos, accesorios</td></tr>
+                        <tr><td>Margen bruto</td><td><strong>~1.200&#8364;</strong></td><td>Antes de impuestos</td></tr>
+                        <tr><td>Margen potencial (compra directa)</td><td><strong>~80%</strong></td><td>Comprando directo a fabrica</td></tr>
+                        <tr><td>Base de clientes existentes</td><td><strong>25.000</strong></td><td>Oportunidad de mantenimiento y cross-sell</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="highlight-box">
-                <h3>&#9889; Oportunidad de Recurrencia: Mantenimiento Anual Solatube</h3>
-                <p>Crear una oferta de <strong>mantenimiento anual</strong> para los 25.000 clientes existentes. Incluye: revision de cupula, limpieza, verificacion del sistema. Precio sugerido: acabado en <strong>7</strong> (97&#8364;, 107&#8364;, 117&#8364;). Cobro via <strong>Stripe</strong> con cargo diferido a 365 dias (0&#8364; al inicio, cobro automatico al ano). Esto genera una base de ingresos recurrentes masiva. Ademas, cada visita de mantenimiento es una oportunidad de <strong>cross-selling</strong>: paneles solares, cambio de comercializadora, aerotermia.</p>
+            <div class="highlight-box reveal-scale">
+                <h3>&#9889; Oportunidad de Recurrencia: Mantenimiento Anual</h3>
+                <p>Crear una oferta de <strong>mantenimiento anual</strong> para los 25.000 clientes existentes. Incluye: revision de cupula, limpieza, verificacion del sistema. Precio sugerido: acabado en <strong>7</strong> (97&#8364;, 107&#8364;, 117&#8364;). Cobro via <strong>Stripe</strong> con cargo diferido a 365 dias. Cada visita de mantenimiento es una oportunidad de <strong>cross-selling</strong>: paneles solares, cambio de comercializadora, aerotermia.</p>
             </div>
         </section>
 
         <!-- SECCION 3: ESTRATEGIA DE VIRALES -->
         <div class="divider"></div>
-        <section class="section fade-in" id="virales">
+        <section class="section reveal" id="virales">
             <div class="section-header">
-                <div class="section-number pink">3</div>
+                <div class="section-number green">3</div>
                 <h2 class="section-title">Estrategia de Viralizacion</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#127909; Principio Fundamental</h3>
-                <p>No hay contenido viral de Solatube en Espana. Esto es una <strong>oportunidad brutal</strong>. La estrategia es <strong>extrapolar las estructuras virales que ya funcionan en placas solares</strong> y aplicarlas al Solatube. El producto es tan disruptivo que un solo reel viral puede generar 20+ ventas directas. <strong>Minimo 2 virales por semana</strong> con la estructura indicada.</p>
+                <p>No hay contenido viral de Solatube en Espana. Esto es una <strong>oportunidad brutal</strong>. La estrategia es <strong>extrapolar las estructuras virales que ya funcionan en placas solares</strong> y aplicarlas al Solatube. El producto es tan disruptivo que un solo reel viral puede generar 20+ ventas directas. <strong>Minimo 2 virales por semana</strong>.</p>
             </div>
 
-            <div class="grid-2" style="margin-top: 24px;">
+            <div class="grid-2 stagger-children" style="margin-top: 28px;">
                 <div class="viral-card">
                     <div class="viral-number">01</div>
                     <h4>Viral Principal: "Luz Gratis Sin Pagar a Ninguna Empresa"</h4>
-                    <p>Estructura validada con 50.000+ likes en placas solares. Se adapta directamente al Solatube. Hook hiperviral identificado en la sesion.</p>
+                    <p>Estructura validada con 50.000+ likes en placas solares. Se adapta directamente al Solatube. Hook hiperviral identificado.</p>
                     <span class="tag urgent">PRIORIDAD MAXIMA</span>
-                    <span class="tag growth">2x por semana</span>
+                    <span class="tag growth">2x POR SEMANA</span>
                 </div>
-
                 <div class="viral-card">
                     <div class="viral-number">02</div>
                     <h4>Viral de Autoridad: "Cuanto Cuesta un Solatube?"</h4>
@@ -517,21 +754,21 @@
                 </div>
             </div>
 
-            <div class="card" style="margin-top: 20px;">
+            <div class="card reveal" style="margin-top: 24px;">
                 <div class="card-header">
-                    <div class="card-icon yellow">&#127916;</div>
+                    <div class="card-icon gold">&#127916;</div>
                     <div>
                         <h3>Herramienta para Videos Explicativos: Kling AI</h3>
-                        <p>Usa <strong>Kling AI</strong> para crear renders animados del Solatube. Se le pasa el manual de instrucciones o apartado tecnico y genera un render que explica parte por parte lo que hay dentro del producto mientras tu hablas. "A la gente le vuelve loco."</p>
+                        <p>Usa <strong>Kling AI</strong> para crear renders animados del Solatube. Se le pasa el manual de instrucciones y genera un render que explica parte por parte lo que hay dentro del producto mientras tu hablas.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="info-box">
+            <div class="info-box reveal">
                 <h4>Reglas de Viralizacion</h4>
                 <ul>
                     <li><strong>Minimo 2 virales/semana</strong> con la estructura del Viral Principal (hook + pasos + resultado + CTA).</li>
-                    <li>El <strong>hook</strong> es lo unico que importa para la viralizacion. Copiar hooks validados de placas solares y adaptarlos a Solatube.</li>
+                    <li>El <strong>hook</strong> es lo unico que importa para la viralizacion. Copiar hooks validados y adaptarlos a Solatube.</li>
                     <li>Publicar desde el perfil personal <strong>Jonathan Solar</strong> (no desde la cuenta de empresa Voltaik).</li>
                     <li>Publicar en <strong>TikTok + Instagram Reels</strong> simultaneamente.</li>
                     <li>CTA siempre: <strong>"Escribe SOLATUBE"</strong> en comentarios.</li>
@@ -542,92 +779,77 @@
 
         <!-- SECCION 4: GUION DE ANUNCIOS (PAIN FIRST) -->
         <div class="divider"></div>
-        <section class="section fade-in" id="guion-anuncios">
+        <section class="section reveal" id="guion-anuncios">
             <div class="section-header">
-                <div class="section-number purple">4</div>
+                <div class="section-number gold">4</div>
                 <h2 class="section-title">Guiones de Anuncios para Meta Ads</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#128293; Estrategia: PAIN FIRST (Dolor Primero)</h3>
                 <p>Todos los anuncios siguen la estructura <strong>Pain First</strong>: empezamos golpeando con el dolor del cliente en los primeros 3 segundos. El espectador debe sentir que le estamos hablando directamente a el. Primero el problema, luego la solucion. Esto maximiza la retencion y la conversion.</p>
             </div>
 
-            <!-- ANUNCIO 1: SOLATUBE -->
-            <div class="card">
+            <!-- ANUNCIO 1 -->
+            <div class="card reveal">
                 <div class="guion-label pain">ANUNCIO 1 — SOLATUBE (PAIN FIRST)</div>
                 <div class="card-header">
-                    <div class="card-icon pink">&#127909;</div>
+                    <div class="card-icon red">&#127909;</div>
                     <div>
                         <h3>Anuncio Solatube: "Zonas Oscuras en Casa"</h3>
                         <p>Duracion: 45-60 segundos. Formato vertical (9:16). Para Meta Ads (Instagram + Facebook).</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="scene">[ESCENA: Tu en una habitacion oscura de una casa, sin ventanas. Luz artificial encendida. Grabas a camara.]</span></p>
-                    <br>
-                    <p><span class="hook">HOOK (0-3s):</span> <span class="pain">"Tienes una zona en tu casa donde NUNCA entra la luz del sol?"</span></p>
-                    <br>
-                    <p><span class="body-text">DOLOR (3-10s):</span> <span class="pain">"Pasillos oscuros, banos sin ventana, sotanos donde siempre tienes que encender la luz... Y cada mes, eso se refleja en tu factura electrica. Estas pagando por algo que el sol te da GRATIS."</span></p>
-                    <br>
-                    <p><span class="body-text">TRANSICION (10-15s):</span> "Pues mira, existe un producto que lleva la luz del sol a CUALQUIER rincon de tu casa, sin cables, sin electricidad, sin mantenimiento."</p>
-                    <br>
-                    <p><span class="scene">[ESCENA: Corte al tejado. Muestras el Solatube instalado. Lo abres.]</span></p>
-                    <br>
-                    <p><span class="solution">SOLUCION (15-35s):</span> "Se llama Solatube. Es un tubo con espejos de un 99.7% de reflectividad que captura la luz del sol desde el tejado y la lleva directamente a la habitacion. Fijate..." <span class="scene">[Muestras la cupula arriba, el tubo, y la salida de luz abajo]</span> "...por aqui entra la luz del sol, baja por el tubo, y mira como sale aqui abajo. Esto que ves antes estaba TOTALMENTE oscuro."</p>
-                    <br>
-                    <p><span class="body-text">PRUEBA SOCIAL (35-45s):</span> "Yo soy Jonathan, llevo anos instalando estos sistemas en toda Cataluna. Tengo un proyecto donde hay 64 Solatubes instalados en un espacio 100% autonomo, sin red electrica. Y funciona de por vida, sin ningun coste."</p>
-                    <br>
+                    <p><span class="scene">[ESCENA: Tu en una habitacion oscura de una casa, sin ventanas. Luz artificial encendida. Grabas a camara.]</span></p><br>
+                    <p><span class="hook">HOOK (0-3s):</span> <span class="pain">"Tienes una zona en tu casa donde NUNCA entra la luz del sol?"</span></p><br>
+                    <p><span class="body-text">DOLOR (3-10s):</span> <span class="pain">"Pasillos oscuros, banos sin ventana, sotanos donde siempre tienes que encender la luz... Y cada mes, eso se refleja en tu factura electrica. Estas pagando por algo que el sol te da GRATIS."</span></p><br>
+                    <p><span class="body-text">TRANSICION (10-15s):</span> "Pues mira, existe un producto que lleva la luz del sol a CUALQUIER rincon de tu casa, sin cables, sin electricidad, sin mantenimiento."</p><br>
+                    <p><span class="scene">[ESCENA: Corte al tejado. Muestras el Solatube instalado. Lo abres.]</span></p><br>
+                    <p><span class="solution">SOLUCION (15-35s):</span> "Se llama Solatube. Es un tubo con espejos de un 99.7% de reflectividad que captura la luz del sol desde el tejado y la lleva directamente a la habitacion. Fijate..." <span class="scene">[Muestras la cupula arriba, el tubo, y la salida de luz abajo]</span> "...por aqui entra la luz del sol, baja por el tubo, y mira como sale aqui abajo. Esto que ves antes estaba TOTALMENTE oscuro."</p><br>
+                    <p><span class="body-text">PRUEBA SOCIAL (35-45s):</span> "Yo soy Jonathan, llevo anos instalando estos sistemas en toda Cataluna. Tengo un proyecto donde hay 64 Solatubes instalados en un espacio 100% autonomo, sin red electrica. Y funciona de por vida, sin ningun coste."</p><br>
                     <p><span class="cta">CTA (45-60s):</span> "Si quieres saber cuanto costaria iluminar esa zona oscura de tu casa con luz natural GRATIS, escribe la palabra <strong>SOLATUBE</strong> aqui abajo y te digo exactamente como hacerlo."</p>
                 </div>
                 <span class="tag urgent">PAIN FIRST</span>
                 <span class="tag growth">META ADS</span>
             </div>
 
-            <!-- ANUNCIO 2: SOLATUBE AHORRO -->
-            <div class="card">
+            <!-- ANUNCIO 2 -->
+            <div class="card reveal">
                 <div class="guion-label pain">ANUNCIO 2 — SOLATUBE (PAIN FIRST - AHORRO)</div>
                 <div class="card-header">
-                    <div class="card-icon orange">&#128161;</div>
+                    <div class="card-icon gold">&#128161;</div>
                     <div>
                         <h3>Anuncio Solatube: "Pagando Luz que el Sol te Da Gratis"</h3>
                         <p>Duracion: 30-45 segundos. Formato vertical (9:16). Enfocado en el dolor del gasto.</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="hook">HOOK (0-3s):</span> <span class="pain">"Cada mes pagas luz por habitaciones donde el sol podria entrar GRATIS."</span></p>
-                    <br>
-                    <p><span class="body-text">DOLOR (3-8s):</span> <span class="pain">"Piensalo. Enciendes la luz del pasillo, del bano, del sotano... 8, 10, 12 horas al dia. Eso son cientos de euros al ano que te estas gastando por iluminar espacios que podrian tener luz natural."</span></p>
-                    <br>
-                    <p><span class="solution">SOLUCION (8-25s):</span> "Yo instalo un sistema que se llama Solatube. Un tubo solar que lleva la luz del sol desde tu tejado hasta cualquier habitacion. Sin electricidad, sin mantenimiento, para toda la vida." <span class="scene">[Muestras antes/despues de una habitacion]</span> "Mira la diferencia. Antes, oscuridad total. Ahora, luz natural pura."</p>
-                    <br>
+                    <p><span class="hook">HOOK (0-3s):</span> <span class="pain">"Cada mes pagas luz por habitaciones donde el sol podria entrar GRATIS."</span></p><br>
+                    <p><span class="body-text">DOLOR (3-8s):</span> <span class="pain">"Piensalo. Enciendes la luz del pasillo, del bano, del sotano... 8, 10, 12 horas al dia. Eso son cientos de euros al ano que te estas gastando por iluminar espacios que podrian tener luz natural."</span></p><br>
+                    <p><span class="solution">SOLUCION (8-25s):</span> "Yo instalo un sistema que se llama Solatube. Un tubo solar que lleva la luz del sol desde tu tejado hasta cualquier habitacion. Sin electricidad, sin mantenimiento, para toda la vida." <span class="scene">[Muestras antes/despues de una habitacion]</span> "Mira la diferencia. Antes, oscuridad total. Ahora, luz natural pura."</p><br>
                     <p><span class="cta">CTA (25-45s):</span> "Ademas, se puede financiar. Si quieres saber cuanto te costaria y cuanto vas a ahorrar, escribe <strong>SOLATUBE</strong> y te hago un presupuesto sin compromiso."</p>
                 </div>
                 <span class="tag urgent">PAIN FIRST</span>
                 <span class="tag revenue">ENFOQUE AHORRO</span>
             </div>
 
-            <!-- ANUNCIO 3: FOTOVOLTAICA -->
-            <div class="card">
+            <!-- ANUNCIO 3 -->
+            <div class="card reveal">
                 <div class="guion-label pain">ANUNCIO 3 — FOTOVOLTAICA (PAIN FIRST)</div>
                 <div class="card-header">
-                    <div class="card-icon teal">&#9889;</div>
+                    <div class="card-icon blue">&#9889;</div>
                     <div>
                         <h3>Anuncio Fotovoltaica: "La Factura que No Para de Subir"</h3>
                         <p>Duracion: 45-60 segundos. Formato vertical (9:16). Para Meta Ads.</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="hook">HOOK (0-3s):</span> <span class="pain">"Tu factura de la luz ha subido un 40% en los ultimos 3 anos y NO va a parar."</span></p>
-                    <br>
-                    <p><span class="body-text">DOLOR (3-12s):</span> <span class="pain">"Cada vez que abres el buzon y ves esa factura, sabes que el mes que viene sera peor. 200, 300, 400 euros... Y lo peor es que no puedes hacer nada. O eso crees."</span></p>
-                    <br>
-                    <p><span class="scene">[ESCENA: Corte a un tejado con paneles solares instalados. Tu al lado.]</span></p>
-                    <br>
-                    <p><span class="solution">SOLUCION (12-35s):</span> "Yo soy Jonathan, ingeniero fotovoltaico, y llevo anos ayudando a familias de toda Cataluna a reducir su factura hasta un 80%. Con una instalacion de paneles solares produces tu propia energia. Lo que no consumes, lo viertes a la red y te lo descuentan." <span class="scene">[Muestras los paneles]</span> "Esta instalacion que ves aqui le ahorra a esta familia mas de 2.000 euros al ano."</p>
-                    <br>
-                    <p><span class="body-text">FINANCIACION (35-45s):</span> "Y si el precio te preocupa, tenemos financiacion desde 0% de intereses con Nemuru. Puedes empezar a ahorrar desde el primer mes pagando menos de lo que pagas ahora de luz."</p>
-                    <br>
+                    <p><span class="hook">HOOK (0-3s):</span> <span class="pain">"Tu factura de la luz ha subido un 40% en los ultimos 3 anos y NO va a parar."</span></p><br>
+                    <p><span class="body-text">DOLOR (3-12s):</span> <span class="pain">"Cada vez que abres el buzon y ves esa factura, sabes que el mes que viene sera peor. 200, 300, 400 euros... Y lo peor es que no puedes hacer nada. O eso crees."</span></p><br>
+                    <p><span class="scene">[ESCENA: Corte a un tejado con paneles solares instalados. Tu al lado.]</span></p><br>
+                    <p><span class="solution">SOLUCION (12-35s):</span> "Yo soy Jonathan, ingeniero fotovoltaico, y llevo anos ayudando a familias de toda Cataluna a reducir su factura hasta un 80%. Con una instalacion de paneles solares produces tu propia energia. Lo que no consumes, lo viertes a la red y te lo descuentan." <span class="scene">[Muestras los paneles]</span> "Esta instalacion que ves aqui le ahorra a esta familia mas de 2.000 euros al ano."</p><br>
+                    <p><span class="body-text">FINANCIACION (35-45s):</span> "Y si el precio te preocupa, tenemos financiacion desde 0% de intereses con Nemuru. Puedes empezar a ahorrar desde el primer mes pagando menos de lo que pagas ahora de luz."</p><br>
                     <p><span class="cta">CTA (45-60s):</span> "Escribe <strong>SOLAR</strong> aqui abajo y te calculo exactamente cuanto puedes ahorrar con tu tejado."</p>
                 </div>
                 <span class="tag urgent">PAIN FIRST</span>
@@ -637,18 +859,18 @@
 
         <!-- SECCION 5: GUION VSL -->
         <div class="divider"></div>
-        <section class="section fade-in" id="guion-vsl">
+        <section class="section reveal" id="guion-vsl">
             <div class="section-header">
-                <div class="section-number teal">5</div>
-                <h2 class="section-title">Guion VSL (Video Sales Letter) — Solatube</h2>
+                <div class="section-number blue">5</div>
+                <h2 class="section-title">Guion VSL (Video Sales Letter)</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#127916; Video de 2-3 Minutos para Landing Page</h3>
                 <p>Este VSL se coloca en la landing page. Su objetivo es <strong>educar al cliente sobre el Solatube</strong>, eliminar objeciones y llevarlo a solicitar presupuesto. Estructura: <strong>Pain First + Educacion + Prueba Social + Oferta + CTA</strong>.</p>
             </div>
 
-            <div class="card">
+            <div class="card reveal">
                 <div class="guion-label vsl">GUION VSL COMPLETO — SOLATUBE (2-3 MIN)</div>
                 <div class="card-header">
                     <div class="card-icon purple">&#127916;</div>
@@ -658,33 +880,25 @@
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="scene">[ESCENA 1: Tu en una habitacion oscura, sin ventanas. Luz artificial encendida. Hablas a camara.]</span></p>
-                    <br>
+                    <p><span class="scene">[ESCENA 1: Tu en una habitacion oscura, sin ventanas. Luz artificial encendida. Hablas a camara.]</span></p><br>
                     <p><span class="hook">APERTURA — DOLOR (0:00 - 0:25):</span></p>
                     <p><span class="pain">"Si estas viendo este video, probablemente tienes una zona en tu casa que esta siempre a oscuras. Un pasillo, un bano interior, un sotano, una cocina sin ventanas..."</span></p>
                     <p><span class="pain">"Y cada dia, cada vez que pasas por ahi, enciendes la luz. Llevas anos haciendolo. Y cada mes, eso se suma a tu factura."</span></p>
-                    <p>"Pero lo peor no es el dinero. Lo peor es vivir en un espacio que deberia tener luz natural y no la tiene. Porque la luz artificial nunca se siente igual."</p>
-                    <br>
+                    <p>"Pero lo peor no es el dinero. Lo peor es vivir en un espacio que deberia tener luz natural y no la tiene. Porque la luz artificial nunca se siente igual."</p><br>
                     <p><span class="body-text">PRESENTACION — QUIEN SOY (0:25 - 0:45):</span></p>
-                    <p>"Me llamo Jonathan, soy ingeniero y llevo anos trabajando en el sector de la energia solar en Cataluna. Dirijo Voltaik, una empresa de ingenieria fotovoltaica, y soy distribuidor oficial de un producto que muy poca gente conoce en Espana pero que va a cambiar la forma en que iluminas tu hogar."</p>
-                    <br>
-                    <p><span class="scene">[ESCENA 2: Corte al tejado. Muestras un Solatube instalado. Lo abres y explicas.]</span></p>
-                    <br>
+                    <p>"Me llamo Jonathan, soy ingeniero y llevo anos trabajando en el sector de la energia solar en Cataluna. Dirijo Voltaik, una empresa de ingenieria fotovoltaica, y soy distribuidor oficial de un producto que muy poca gente conoce en Espana pero que va a cambiar la forma en que iluminas tu hogar."</p><br>
+                    <p><span class="scene">[ESCENA 2: Corte al tejado. Muestras un Solatube instalado. Lo abres y explicas.]</span></p><br>
                     <p><span class="solution">EXPLICACION — QUE ES SOLATUBE (0:45 - 1:30):</span></p>
                     <p>"Se llama Solatube. Es un sistema de iluminacion natural que funciona con un tubo de alta reflectividad — un 99.7% — que captura la luz del sol desde el tejado y la transporta hasta el interior de tu casa."</p>
                     <p><span class="scene">[Senalando cada parte]</span> "Aqui arriba tenemos la cupula que recoge la luz. El tubo la transporta con espejos de ultima generacion. Y aqui abajo..." <span class="scene">[Bajas a la habitacion]</span> "...sale la luz. Fijate. Esto que ves ahora, antes estaba completamente oscuro."</p>
-                    <p>"No necesita electricidad. No tiene mantenimiento. Se instala en 2-3 horas. Y funciona de por vida."</p>
-                    <br>
+                    <p>"No necesita electricidad. No tiene mantenimiento. Se instala en 2-3 horas. Y funciona de por vida."</p><br>
                     <p><span class="body-text">PRUEBA SOCIAL (1:30 - 1:50):</span></p>
                     <p>"Tengo un proyecto que se llama Casa Verde donde hay 64 Solatubes instalados. Es un espacio 100% autonomo: no tiene conexion a la red electrica ni al agua del estado. Todo funciona con energia solar. Y la iluminacion interior es espectacular, todo con Solatube."</p>
-                    <p>"Llevo instalando estos sistemas en toda Cataluna — Girona, Costa Brava, Barcelona — y los resultados siempre son los mismos: el cliente no se puede creer la diferencia."</p>
-                    <br>
-                    <p><span class="scene">[ESCENA 3: De vuelta a camara, tono directo.]</span></p>
-                    <br>
+                    <p>"Llevo instalando estos sistemas en toda Cataluna — Girona, Costa Brava, Barcelona — y los resultados siempre son los mismos: el cliente no se puede creer la diferencia."</p><br>
+                    <p><span class="scene">[ESCENA 3: De vuelta a camara, tono directo.]</span></p><br>
                     <p><span class="body-text">OFERTA Y OBJECIONES (1:50 - 2:20):</span></p>
                     <p>"El precio de un Solatube instalado ronda los 1.600 euros con IVA. Pero piensa en lo que te ahorras: anos y anos de luz electrica en esa zona. Y si el precio te parece una barrera, trabajamos con Nemuru, una plataforma de financiacion que te permite pagarlo a plazos, incluso sin intereses."</p>
-                    <p>"Ademas, la instalacion es rapida. En 2-3 horas esta hecho. No necesitas obra mayor, no necesitas permisos complicados. Vienes, instalamos, y desde ese momento tienes luz natural para siempre."</p>
-                    <br>
+                    <p>"Ademas, la instalacion es rapida. En 2-3 horas esta hecho. No necesitas obra mayor, no necesitas permisos complicados. Vienes, instalamos, y desde ese momento tienes luz natural para siempre."</p><br>
                     <p><span class="cta">CTA — CIERRE (2:20 - 2:45):</span></p>
                     <p>"Si tienes una zona oscura en tu casa y quieres solucionarlo de una vez por todas con luz natural, rellena el formulario que tienes justo debajo de este video. Te contactare personalmente para hacerte un presupuesto a medida, sin ningun compromiso."</p>
                     <p>"Soy Jonathan, de Voltaik, y estoy aqui para ayudarte a iluminar tu hogar con el sol."</p>
@@ -696,39 +910,35 @@
 
         <!-- SECCION 6: GUIONES DE REELS VIRALES -->
         <div class="divider"></div>
-        <section class="section fade-in" id="guion-reels">
+        <section class="section reveal" id="guion-reels">
             <div class="section-header">
-                <div class="section-number pink">6</div>
+                <div class="section-number green">6</div>
                 <h2 class="section-title">Guiones de Reels Virales</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#128293; Estructura Viral: Hook + Pasos + Resultado + CTA</h3>
                 <p>Estos reels se publican en <strong>TikTok + Instagram Reels</strong> desde el perfil <strong>Jonathan Solar</strong>. Minimo <strong>2 por semana</strong>. El hook es lo mas importante: los primeros 2-3 segundos determinan si el video se hace viral o no.</p>
             </div>
 
             <!-- REEL 1 -->
-            <div class="card">
+            <div class="card reveal-left">
                 <div class="guion-label viral">REEL VIRAL 1 — "LUZ GRATIS"</div>
                 <div class="card-header">
-                    <div class="card-icon pink">&#127909;</div>
+                    <div class="card-icon red">&#127909;</div>
                     <div>
                         <h3>Reel: "Quieres Luz Gratis Sin Pagar a Ninguna Empresa?"</h3>
                         <p>Duracion: 30-45 segundos. Formato vertical. Hook hiperviral validado.</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="hook">HOOK (0-3s):</span> "Quieres luz gratis sin tener que pagarle la luz a ninguna empresa? Fijate en esto."</p>
-                    <br>
+                    <p><span class="hook">HOOK (0-3s):</span> "Quieres luz gratis sin tener que pagarle la luz a ninguna empresa? Fijate en esto."</p><br>
                     <p><span class="scene">[ESCENA: En el tejado, junto al Solatube]</span></p>
                     <p><span class="body-text">PASO 1:</span> "Primero, hacemos la obra." <span class="scene">[Mostrar instalacion rapida]</span></p>
                     <p><span class="body-text">PASO 2:</span> "Ahora estamos conectando el Solatube." <span class="scene">[Conectando el tubo]</span></p>
-                    <p><span class="body-text">PASO 3:</span> "Acabando de dejarlo bien puesto." <span class="scene">[Ajustes finales]</span></p>
-                    <br>
-                    <p><span class="body-text">PASO 4:</span> "Fijate como funciona." <span class="scene">[Subir al tejado]</span> "Por aqui entra la luz..."</p>
-                    <br>
-                    <p><span class="solution">RESULTADO:</span> "Y ahora esto es lo mas excepcional. Por aqui sale, fijate como ambienta una zona que antes..." <span class="scene">[Mostrar el ANTES]</span> "...estaba totalmente oscura."</p>
-                    <br>
+                    <p><span class="body-text">PASO 3:</span> "Acabando de dejarlo bien puesto." <span class="scene">[Ajustes finales]</span></p><br>
+                    <p><span class="body-text">PASO 4:</span> "Fijate como funciona." <span class="scene">[Subir al tejado]</span> "Por aqui entra la luz..."</p><br>
+                    <p><span class="solution">RESULTADO:</span> "Y ahora esto es lo mas excepcional. Por aqui sale, fijate como ambienta una zona que antes..." <span class="scene">[Mostrar el ANTES]</span> "...estaba totalmente oscura."</p><br>
                     <p><span class="cta">CTA:</span> "Si te interesa tener este producto, escribe la palabra <strong>SOLATUBE</strong> aqui debajo."</p>
                 </div>
                 <span class="tag urgent">HIPERVIRAL</span>
@@ -736,23 +946,20 @@
             </div>
 
             <!-- REEL 2 -->
-            <div class="card">
+            <div class="card reveal-right">
                 <div class="guion-label viral">REEL VIRAL 2 — "CUANTO CUESTA"</div>
                 <div class="card-header">
-                    <div class="card-icon teal">&#128161;</div>
+                    <div class="card-icon blue">&#128161;</div>
                     <div>
                         <h3>Reel: "Cuanto Cuesta un Solatube?"</h3>
                         <p>Duracion: 30-40 segundos. Formato vertical. Contenido de autoridad.</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="hook">HOOK (0-3s):</span> "Cuanto cuesta un Solatube?"</p>
-                    <br>
+                    <p><span class="hook">HOOK (0-3s):</span> "Cuanto cuesta un Solatube?"</p><br>
                     <p><span class="scene">[ESCENA: En un tejado, cogiendo el Solatube y abriendolo]</span></p>
-                    <p><span class="body-text">CUERPO:</span> "La verdad es que un Solatube va en torno a los 1.600 euros instalado. Pero gracias a esto no vas a tener ningun coste electrico en ese espacio muerto que tienes en tu casa."</p>
-                    <br>
-                    <p><span class="solution">EXPLICACION:</span> "Funciona con espejos de un 99.7% de reflectividad. Captura la luz del sol y la lleva directamente a la habitacion. Sin electricidad, sin mantenimiento, para toda la vida."</p>
-                    <br>
+                    <p><span class="body-text">CUERPO:</span> "La verdad es que un Solatube va en torno a los 1.600 euros instalado. Pero gracias a esto no vas a tener ningun coste electrico en ese espacio muerto que tienes en tu casa."</p><br>
+                    <p><span class="solution">EXPLICACION:</span> "Funciona con espejos de un 99.7% de reflectividad. Captura la luz del sol y la lleva directamente a la habitacion. Sin electricidad, sin mantenimiento, para toda la vida."</p><br>
                     <p><span class="cta">CTA:</span> "Si quieres saber si se puede instalar en tu casa, escribe <strong>SOLATUBE</strong> y te lo digo."</p>
                 </div>
                 <span class="tag important">AUTORIDAD</span>
@@ -760,24 +967,21 @@
             </div>
 
             <!-- REEL 3 -->
-            <div class="card">
+            <div class="card reveal-left">
                 <div class="guion-label viral">REEL VIRAL 3 — "ANTES Y DESPUES"</div>
                 <div class="card-header">
-                    <div class="card-icon yellow">&#127775;</div>
+                    <div class="card-icon gold">&#127775;</div>
                     <div>
                         <h3>Reel: "Mira lo que Pasa Cuando Instalas un Solatube"</h3>
                         <p>Duracion: 20-30 segundos. Formato vertical. Impacto visual puro.</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="hook">HOOK (0-3s):</span> "Mira lo que pasa cuando instalas un Solatube en una habitacion que NUNCA ha tenido luz natural."</p>
-                    <br>
+                    <p><span class="hook">HOOK (0-3s):</span> "Mira lo que pasa cuando instalas un Solatube en una habitacion que NUNCA ha tenido luz natural."</p><br>
                     <p><span class="scene">[ESCENA: Habitacion oscura. Enciendes la camara. Todo negro.]</span></p>
-                    <p><span class="body-text">ANTES:</span> "Esto es un bano interior. Cero ventanas. Siempre con la luz encendida."</p>
-                    <br>
+                    <p><span class="body-text">ANTES:</span> "Esto es un bano interior. Cero ventanas. Siempre con la luz encendida."</p><br>
                     <p><span class="scene">[CORTE: Misma habitacion, ahora con Solatube instalado. Luz natural entrando.]</span></p>
-                    <p><span class="solution">DESPUES:</span> "Y esto es el mismo bano despues del Solatube. Luz natural pura. Sin electricidad. Para siempre."</p>
-                    <br>
+                    <p><span class="solution">DESPUES:</span> "Y esto es el mismo bano despues del Solatube. Luz natural pura. Sin electricidad. Para siempre."</p><br>
                     <p><span class="cta">CTA:</span> "Escribe <strong>SOLATUBE</strong> si quieres esto en tu casa."</p>
                 </div>
                 <span class="tag urgent">IMPACTO VISUAL</span>
@@ -785,24 +989,21 @@
             </div>
 
             <!-- REEL 4 -->
-            <div class="card">
+            <div class="card reveal-right">
                 <div class="guion-label viral">REEL VIRAL 4 — "CASA VERDE"</div>
                 <div class="card-header">
-                    <div class="card-icon purple">&#127968;</div>
+                    <div class="card-icon green">&#127968;</div>
                     <div>
                         <h3>Reel: "64 Solatubes en una Casa 100% Autonoma"</h3>
                         <p>Duracion: 40-50 segundos. Formato vertical. Contenido WOW / showroom.</p>
                     </div>
                 </div>
                 <div class="script-box">
-                    <p><span class="hook">HOOK (0-3s):</span> "Esta casa NO esta conectada a la red electrica y tiene LUZ NATURAL en todas las habitaciones."</p>
-                    <br>
+                    <p><span class="hook">HOOK (0-3s):</span> "Esta casa NO esta conectada a la red electrica y tiene LUZ NATURAL en todas las habitaciones."</p><br>
                     <p><span class="scene">[ESCENA: Exterior de la Casa Verde. Entras caminando.]</span></p>
-                    <p><span class="body-text">CUERPO:</span> "Esto es la Casa Verde. Un proyecto donde instalamos 64 Solatubes. No tiene conexion a la red electrica, no tiene agua del estado. Todo funciona con energia solar."</p>
-                    <br>
+                    <p><span class="body-text">CUERPO:</span> "Esto es la Casa Verde. Un proyecto donde instalamos 64 Solatubes. No tiene conexion a la red electrica, no tiene agua del estado. Todo funciona con energia solar."</p><br>
                     <p><span class="scene">[Recorrido por el interior mostrando la luz natural en cada espacio]</span></p>
-                    <p><span class="solution">RESULTADO:</span> "Fijate en la luz. Todo esto es luz del sol, entrando por los Solatubes. Sin un solo punto de luz electrica encendido. Asi se vive con energia 100% natural."</p>
-                    <br>
+                    <p><span class="solution">RESULTADO:</span> "Fijate en la luz. Todo esto es luz del sol, entrando por los Solatubes. Sin un solo punto de luz electrica encendido. Asi se vive con energia 100% natural."</p><br>
                     <p><span class="cta">CTA:</span> "Si quieres tener luz natural en tu casa sin pagar ni un euro de electricidad, escribe <strong>SOLATUBE</strong>."</p>
                 </div>
                 <span class="tag important">SHOWROOM</span>
@@ -810,145 +1011,87 @@
             </div>
         </section>
 
-        <!-- SECCION 7: MARCA PERSONAL E INSTAGRAM -->
+        <!-- SECCION 7: MARCA PERSONAL -->
         <div class="divider"></div>
-        <section class="section fade-in" id="marca">
+        <section class="section reveal" id="marca">
             <div class="section-header">
-                <div class="section-number purple">7</div>
+                <div class="section-number gold">7</div>
                 <h2 class="section-title">Marca Personal e Instagram</h2>
             </div>
 
-            <div class="card">
+            <div class="card reveal">
                 <div class="card-header">
-                    <div class="card-icon pink">&#128241;</div>
+                    <div class="card-icon blue">&#128241;</div>
                     <div>
                         <h3>Transformacion del Perfil de Instagram</h3>
                         <p>Convierte tu perfil personal en una marca profesional. Todo el contenido se publica desde <strong>Jonathan</strong>, no desde las cuentas de empresa.</p>
                     </div>
                 </div>
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <div class="step-content">
-                        <h4>Cambiar nombre a "Jonathan Solar"</h4>
-                        <p>Igual que en TikTok (donde ya creaste "Solar con Jonathan"). Un nombre que la gente identifique inmediatamente con energia solar.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <div class="step-content">
-                        <h4>Ocultar posts personales no profesionales</h4>
-                        <p>No eliminar, solo ocultar. Quitar historias destacadas de viajes/paises. Empezar con un perfil limpio y profesional.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <div class="step-content">
-                        <h4>Actualizar biografia</h4>
-                        <p>Incluir: "Todo sobre energia solar" + algo diferenciador como "Distribuyo un producto unico en el mundo para ahorrar el 100% de la luz" o "Reduce tu factura electrica hasta el 80%".</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">4</div>
-                    <div class="step-content">
-                        <h4>Publicar contenido profesional</h4>
-                        <p>Virales de Solatube (2/semana minimo) + contenido de autoridad sobre fotovoltaica + testimonios + instalaciones. Todo desde Jonathan, no desde marca corporativa.</p>
-                    </div>
-                </div>
+                <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Cambiar nombre a "Jonathan Solar"</h4><p>Igual que en TikTok (donde ya creaste "Solar con Jonathan"). Un nombre que la gente identifique inmediatamente con energia solar.</p></div></div>
+                <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Ocultar posts personales no profesionales</h4><p>No eliminar, solo ocultar. Quitar historias destacadas de viajes/paises. Empezar con un perfil limpio y profesional.</p></div></div>
+                <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Actualizar biografia</h4><p>Incluir: "Todo sobre energia solar" + algo diferenciador como "Distribuyo un producto unico en el mundo para ahorrar el 100% de la luz".</p></div></div>
+                <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Publicar contenido profesional</h4><p>Virales de Solatube (2/semana minimo) + contenido de autoridad sobre fotovoltaica + testimonios + instalaciones.</p></div></div>
             </div>
 
-            <div class="info-box">
+            <div class="info-box reveal">
                 <h4>Estructura de Perfiles</h4>
                 <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Plataforma</th>
-                            <th>Nombre</th>
-                            <th>Uso</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Plataforma</th><th>Nombre</th><th>Uso</th></tr></thead>
                     <tbody>
-                        <tr>
-                            <td>Instagram</td>
-                            <td><strong>Jonathan Solar</strong> (perfil personal convertido)</td>
-                            <td>Marca personal. Todo el contenido viral y profesional sale de aqui.</td>
-                        </tr>
-                        <tr>
-                            <td>TikTok</td>
-                            <td><strong>Solar con Jonathan</strong></td>
-                            <td>Mismo contenido viral. Ya creado.</td>
-                        </tr>
-                        <tr>
-                            <td>Instagram (empresa)</td>
-                            <td>Voltaik</td>
-                            <td>Solo para colaboraciones puntuales.</td>
-                        </tr>
-                        <tr>
-                            <td>Instagram (empresa)</td>
-                            <td>Somni (comercializadora)</td>
-                            <td>Perfil corporativo.</td>
-                        </tr>
+                        <tr><td>Instagram</td><td><strong>Jonathan Solar</strong></td><td>Marca personal. Todo el contenido viral y profesional sale de aqui.</td></tr>
+                        <tr><td>TikTok</td><td><strong>Solar con Jonathan</strong></td><td>Mismo contenido viral. Ya creado.</td></tr>
+                        <tr><td>Instagram (empresa)</td><td>Voltaik</td><td>Solo para colaboraciones puntuales.</td></tr>
+                        <tr><td>Instagram (empresa)</td><td>Somni (comercializadora)</td><td>Perfil corporativo.</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- SECCION 8: ESTRATEGIA CROSS-SELLING -->
+        <!-- SECCION 8: CROSS-SELLING -->
         <div class="divider"></div>
-        <section class="section fade-in" id="crossselling">
+        <section class="section reveal" id="crossselling">
             <div class="section-header">
-                <div class="section-number teal">8</div>
+                <div class="section-number blue">8</div>
                 <h2 class="section-title">Estrategia de Cross-Selling</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#128273; "Meter la Pata" — La Clave del Escalado</h3>
                 <p><strong>"La clave es poner la pata. Da igual lo que hagas, pero al que le pones una pata ya esta dentro."</strong> Cada producto es una puerta de entrada para vender el resto del ecosistema.</p>
             </div>
 
-            <div class="info-box">
+            <div class="info-box reveal">
                 <h4>Cadena de Cross-Selling</h4>
                 <ul>
                     <li><strong>Cargador electrico (800&#8364;)</strong> &#8594; Producto de entrada con poco margen &#8594; Luego vendes fotovoltaica (ticket alto).</li>
                     <li><strong>Solatube (1.600&#8364;)</strong> &#8594; Producto de entrada &#8594; Luego vendes paneles solares + cambio de comercializadora.</li>
                     <li><strong>Mantenimiento anual</strong> &#8594; Visita al cliente &#8594; "Has pensado en paneles? Cuanto pagas de luz?"</li>
                     <li><strong>Comercializadora (Somni)</strong> &#8594; Factura mensual &#8594; Relacion continua &#8594; Cross-sell de todo lo demas.</li>
-                    <li><strong>Base de 25.000 clientes Solatube</strong> &#8594; Ofrecer mantenimiento &#8594; Cada visita = oportunidad de venta de fotovoltaica, comercializadora, etc.</li>
+                    <li><strong>Base de 25.000 clientes Solatube</strong> &#8594; Ofrecer mantenimiento &#8594; Cada visita = oportunidad de venta.</li>
                 </ul>
             </div>
         </section>
 
         <!-- SECCION 9: SIGUIENTE PASO -->
         <div class="divider"></div>
-        <section class="section fade-in" id="siguiente">
+        <section class="section reveal" id="siguiente">
             <div class="section-header">
-                <div class="section-number pink">9</div>
+                <div class="section-number green">9</div>
                 <h2 class="section-title">Tu Siguiente Paso</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#127919; Lo que Tienes que Hacer Ahora</h3>
-                <p>Tienes en este documento todo lo que necesitas para empezar: los guiones de anuncios, el VSL, los reels virales y la estrategia de marca personal. <strong>Grabalo todo</strong> siguiendo las instrucciones de cada guion. Una vez tengas el material grabado, el siguiente paso es construir tu embudo de ventas completo: landing page, automatizaciones y lanzamiento de campanas.</p>
+                <p>Tienes en este documento todo lo que necesitas para empezar: los guiones de anuncios, el VSL, los reels virales y la estrategia de marca personal. <strong>Grabalo todo</strong> siguiendo las instrucciones de cada guion. Una vez tengas el material grabado, el siguiente paso es construir tu embudo de ventas completo.</p>
             </div>
 
-            <div class="info-box">
+            <div class="info-box reveal">
                 <h4>Tus Deberes</h4>
                 <ul class="checklist">
-                    <li>
-                        <div class="check-box"></div>
-                        <div><strong>Grabar los anuncios para Meta Ads</strong> siguiendo los 3 guiones de esta pagina (2 de Solatube + 1 de Fotovoltaica). Estrategia Pain First.</div>
-                    </li>
-                    <li>
-                        <div class="check-box"></div>
-                        <div><strong>Grabar el VSL de 2-3 minutos</strong> siguiendo el guion completo de esta pagina. Este video ira en tu landing page.</div>
-                    </li>
-                    <li>
-                        <div class="check-box"></div>
-                        <div><strong>Grabar los primeros Reels virales</strong> con los 4 guiones proporcionados. Publicar en TikTok + Instagram Reels desde "Jonathan Solar".</div>
-                    </li>
-                    <li>
-                        <div class="check-box"></div>
-                        <div><strong>Cambiar tu perfil de Instagram</strong> a "Jonathan Solar". Ocultar posts personales. Actualizar biografia.</div>
-                    </li>
+                    <li><div class="check-box"></div><div><strong>Grabar los anuncios para Meta Ads</strong> siguiendo los 3 guiones de esta pagina (2 de Solatube + 1 de Fotovoltaica). Estrategia Pain First.</div></li>
+                    <li><div class="check-box"></div><div><strong>Grabar el VSL de 2-3 minutos</strong> siguiendo el guion completo de esta pagina. Este video ira en tu landing page.</div></li>
+                    <li><div class="check-box"></div><div><strong>Grabar los primeros Reels virales</strong> con los 4 guiones proporcionados. Publicar en TikTok + Instagram Reels desde "Jonathan Solar".</div></li>
+                    <li><div class="check-box"></div><div><strong>Cambiar tu perfil de Instagram</strong> a "Jonathan Solar". Ocultar posts personales. Actualizar biografia.</div></li>
                 </ul>
             </div>
 
@@ -963,18 +1106,18 @@
 
         <!-- SECCION 10: RESUMEN -->
         <div class="divider"></div>
-        <section class="section fade-in" id="resumen">
+        <section class="section reveal" id="resumen">
             <div class="section-header">
-                <div class="section-number purple">10</div>
+                <div class="section-number gold">10</div>
                 <h2 class="section-title">Resumen Ejecutivo</h2>
             </div>
 
-            <div class="highlight-box">
+            <div class="highlight-box reveal-scale">
                 <h3>&#128640; La Vision</h3>
                 <p>Jonathan tiene un producto unico (Solatube) con margenes excepcionales (65-80%), un mercado sin competencia digital, y una base de 25.000 clientes existentes sin explotar. La estrategia es clara: <strong>marca personal + virales + embudo digital + equipo comercial a comision</strong>. El Solatube es el producto de entrada que abre la puerta a fotovoltaica, comercializadora, aerotermia y mantenimiento recurrente.</p>
             </div>
 
-            <div class="info-box">
+            <div class="info-box reveal">
                 <h4>Casos de Exito de Referencia</h4>
                 <ul>
                     <li><strong>"Andy y Lucas"</strong> — Clientes en placas solares. Llegaron a 200.000&#8364;/mes.</li>
@@ -987,31 +1130,77 @@
         <!-- Footer -->
         <div class="divider"></div>
         <div class="footer">
+            <div class="hero-logo" style="width: 180px; margin-bottom: 24px; animation: none; opacity: 0.7;">
+                <img src="logo-focus.png" alt="FOCUS Consulting Group" style="width: 100%; height: auto;">
+            </div>
             <p>Documento generado a partir de la sesion de consultoria del 19 de marzo de 2026</p>
-            <p style="margin-top: 8px;"><a href="https://focusconsultor.com" target="_blank">Focus Consultor</a> &middot; <a href="https://lucenathor.com" target="_blank">Lucenathor</a></p>
+            <p style="margin-top: 8px;"><a href="https://focusconsultor.com" target="_blank">Focus Consulting Group</a></p>
             <p style="margin-top: 16px; font-size: 11px; color: var(--text-muted);">Documento confidencial para uso interno</p>
         </div>
     </div>
 
     <script>
-        // Progress bar
+        // === PARTICLES ===
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (6 + Math.random() * 6) + 's';
+            particle.style.width = (2 + Math.random() * 3) + 'px';
+            particle.style.height = particle.style.width;
+            particlesContainer.appendChild(particle);
+        }
+
+        // === PROGRESS BAR ===
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('progressBar').style.width = scrolled + '%';
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
         });
 
-        // Fade in animations
-        const observer = new IntersectionObserver((entries) => {
+        // === NAV SCROLL EFFECT ===
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // === SCROLL REVEAL ===
+        const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // === SMOOTH SCROLL FOR NAV LINKS ===
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // === CHECKBOX TOGGLE ===
+        document.querySelectorAll('.check-box').forEach(box => {
+            box.addEventListener('click', function() {
+                if (this.style.background) {
+                    this.style.background = '';
+                    this.innerHTML = '';
+                } else {
+                    this.style.background = 'var(--accent)';
+                    this.innerHTML = '<svg style="width:14px;height:14px;margin:3px;" viewBox="0 0 24 24" fill="none" stroke="#0b1120" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>';
+                }
+            });
+        });
     </script>
 </body>
 </html>
