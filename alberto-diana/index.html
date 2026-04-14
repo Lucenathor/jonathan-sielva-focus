@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan de Viralización — Alberto Güemes & Diana | FOCUS Consulting Group</title>
+    <title>Plan de Viralización — Alberto & Diana | FOCUS Consulting Group</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,12 +22,15 @@
             --warning: #f59e0b;
             --danger: #ef4444;
             --purple: #a855f7;
+            --tiktok-pink: #fe2c55;
+            --tiktok-cyan: #25f4ee;
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
             --border: rgba(255,255,255,0.08);
             --gold-gradient: linear-gradient(135deg, #b8a04c, #d4c06a, #b8a04c);
             --blue-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+            --tiktok-gradient: linear-gradient(135deg, #fe2c55, #25f4ee);
             --glass: rgba(255,255,255,0.03);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,7 +54,8 @@
             background: 
                 radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 20%, rgba(184, 160, 76, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 40% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+                radial-gradient(ellipse at 40% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 30%, rgba(254, 44, 85, 0.04) 0%, transparent 40%);
             animation: auroraMove 20s ease-in-out infinite;
         }
         @keyframes auroraMove {
@@ -81,326 +85,324 @@
             box-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* === NAVIGATION === */
+        /* === NAV === */
         .nav {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: rgba(11, 17, 32, 0.8); backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid var(--border); z-index: 999; padding: 12px 0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+            padding: 16px 32px; display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.4s ease;
+            background: transparent;
         }
-        .nav.scrolled { background: rgba(11, 17, 32, 0.95); box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
-        .nav-inner {
-            max-width: 1200px; margin: 0 auto; padding: 0 32px;
-            display: flex; justify-content: space-between; align-items: center;
+        .nav.scrolled {
+            background: rgba(11, 17, 32, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 32px;
         }
-        .nav-logo { height: 36px; opacity: 0.9; transition: opacity 0.3s; }
-        .nav-logo:hover { opacity: 1; }
+        .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .nav-logo img { height: 32px; opacity: 0.9; transition: opacity 0.3s; }
+        .nav-logo:hover img { opacity: 1; }
         .nav-links { display: flex; gap: 24px; list-style: none; }
         .nav-links a {
-            color: var(--text-secondary); text-decoration: none; font-size: 13px;
-            font-weight: 500; transition: color 0.3s; letter-spacing: 0.3px;
+            color: var(--text-secondary); text-decoration: none; font-size: 0.82rem;
+            font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase;
+            transition: color 0.3s; position: relative;
         }
-        .nav-links a:hover { color: var(--accent-light); }
-
-        /* === MAIN CONTENT === */
-        .main { position: relative; z-index: 1; }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+            background: var(--accent); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover::after { width: 100%; }
 
         /* === HERO === */
         .hero {
             min-height: 100vh; display: flex; align-items: center; justify-content: center;
             text-align: center; padding: 120px 32px 80px; position: relative;
         }
-        .hero::before {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(184, 160, 76, 0.1) 0%, transparent 70%);
-            animation: heroPulse 4s ease-in-out infinite;
-        }
-        @keyframes heroPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
-        }
-        .hero-content { position: relative; z-index: 1; max-width: 800px; }
-        .hero-logo { height: 70px; margin-bottom: 32px; animation: fadeInDown 1s ease; }
+        .hero-content { max-width: 800px; }
+        .hero-logo { width: 200px; margin-bottom: 32px; opacity: 0; animation: heroFadeIn 1s ease 0.2s forwards; }
         .hero-badge {
             display: inline-block; padding: 8px 20px; border-radius: 50px;
             background: rgba(184, 160, 76, 0.1); border: 1px solid rgba(184, 160, 76, 0.3);
-            color: var(--accent-light); font-size: 12px; font-weight: 600;
-            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px;
-            animation: fadeInDown 1s ease 0.2s both;
+            color: var(--accent); font-size: 0.8rem; font-weight: 600; letter-spacing: 1.5px;
+            text-transform: uppercase; margin-bottom: 24px;
+            opacity: 0; animation: heroFadeIn 1s ease 0.4s forwards;
         }
         .hero h1 {
-            font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem);
+            font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.8rem);
             font-weight: 700; line-height: 1.15; margin-bottom: 20px;
-            animation: fadeInUp 1s ease 0.4s both;
+            opacity: 0; animation: heroFadeIn 1s ease 0.6s forwards;
         }
         .hero h1 .gold { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-sub {
-            font-size: 1.15rem; color: var(--text-secondary); max-width: 600px;
-            margin: 0 auto 16px; animation: fadeInUp 1s ease 0.6s both;
+            color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin: 0 auto 32px;
+            opacity: 0; animation: heroFadeIn 1s ease 0.8s forwards;
         }
         .hero-meta {
-            display: flex; gap: 32px; justify-content: center; margin-top: 32px;
-            animation: fadeInUp 1s ease 0.8s both;
+            display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+            opacity: 0; animation: heroFadeIn 1s ease 1s forwards;
         }
         .hero-meta-item { text-align: center; }
-        .hero-meta-item .number {
-            font-family: 'Space Grotesk', monospace; font-size: 1.8rem;
-            font-weight: 700; color: var(--accent);
+        .hero-meta-item .value { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        .hero-meta-item .label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .hero-meta-item .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* === SECTIONS === */
         .section { padding: 80px 32px; max-width: 1100px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 56px; }
         .section-number {
-            font-family: 'Space Grotesk', monospace; font-size: 13px;
-            color: var(--accent); font-weight: 600; letter-spacing: 3px;
-            text-transform: uppercase; margin-bottom: 12px;
+            font-family: 'Space Grotesk', monospace; font-size: 0.8rem; color: var(--accent);
+            letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; font-weight: 600;
         }
         .section-title {
-            font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.4rem);
-            font-weight: 700; margin-bottom: 16px;
+            font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            font-weight: 700; margin-bottom: 12px;
         }
         .section-subtitle { color: var(--text-secondary); font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
-        .separator {
-            height: 1px; max-width: 200px; margin: 0 auto;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            position: relative; overflow: hidden;
-        }
-        .separator::after {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            animation: shimmer 3s infinite;
-        }
-        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
 
         /* === CARDS === */
         .card {
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: 16px; padding: 32px; margin-bottom: 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
+            transition: all 0.4s ease; position: relative; overflow: hidden;
         }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(184, 160, 76, 0.3);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px var(--accent-glow);
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--gold-gradient); opacity: 0; transition: opacity 0.4s;
         }
-        .card-title {
-            font-family: 'Playfair Display', serif; font-size: 1.3rem;
-            font-weight: 700; margin-bottom: 16px; color: var(--text-primary);
-        }
-        .card-title .icon { margin-right: 10px; }
+        .card:hover { background: var(--bg-card-hover); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .card:hover::before { opacity: 1; }
+        .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 16px; color: var(--text-primary); }
 
-        /* === KPI GRID === */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 32px 0; }
-        .kpi-card {
+        /* === TIKTOK VIRAL CARD === */
+        .tiktok-card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 28px; text-align: center;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden;
+            border-radius: 16px; padding: 28px; margin-bottom: 20px;
+            transition: all 0.4s ease; position: relative; overflow: hidden;
+            border-left: 3px solid transparent;
         }
-        .kpi-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: var(--gold-gradient); opacity: 0;
-            transition: opacity 0.3s;
+        .tiktok-card:hover {
+            background: var(--bg-card-hover); transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-left-color: var(--tiktok-pink);
         }
-        .kpi-card:hover::before { opacity: 1; }
-        .kpi-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .kpi-value {
-            font-family: 'Space Grotesk', monospace; font-size: 2rem;
-            font-weight: 700; color: var(--accent); margin-bottom: 6px;
+        .tiktok-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+        .tiktok-handle {
+            font-family: 'Space Grotesk', monospace; font-weight: 700; font-size: 0.95rem;
+            color: var(--tiktok-cyan);
         }
-        .kpi-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
-
-        /* === SCRIPT BLOCKS === */
-        .script-block {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 36px; margin-bottom: 32px;
-            position: relative; overflow: hidden;
-            transition: all 0.4s ease;
+        .tiktok-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+        .tiktok-stat {
+            font-size: 0.75rem; padding: 3px 10px; border-radius: 20px;
+            font-weight: 600;
         }
-        .script-block:hover {
-            border-color: rgba(184, 160, 76, 0.3);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        .tiktok-stat.likes { background: rgba(254, 44, 85, 0.15); color: var(--tiktok-pink); }
+        .tiktok-stat.views { background: rgba(37, 244, 238, 0.1); color: var(--tiktok-cyan); }
+        .tiktok-stat.followers { background: rgba(184, 160, 76, 0.15); color: var(--accent); }
+        .tiktok-quote {
+            font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic;
+            color: var(--text-primary); margin-bottom: 12px; padding-left: 16px;
+            border-left: 2px solid var(--accent);
         }
-        .script-block::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        .tiktok-structure {
+            font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px;
         }
-        .script-block.ad::before { background: var(--blue-gradient); }
-        .script-block.vsl::before { background: linear-gradient(135deg, var(--accent), var(--accent-light)); }
-        .script-block.reel::before { background: linear-gradient(135deg, var(--purple), #c084fc); }
-        .script-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+        .tiktok-structure strong { color: var(--accent-light); }
+        .tiktok-fit {
+            font-size: 0.82rem; color: var(--success); padding: 8px 14px;
+            background: rgba(16, 185, 129, 0.08); border-radius: 8px;
+            border-left: 2px solid var(--success);
         }
-        .script-title {
-            font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+        .tiktok-link {
+            display: inline-block; margin-top: 10px; font-size: 0.8rem;
+            color: var(--tiktok-pink); text-decoration: none; font-weight: 600;
+            transition: all 0.3s;
         }
-        .script-badge {
-            padding: 6px 14px; border-radius: 50px; font-size: 11px;
-            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-        }
-        .script-badge.ad { background: rgba(59, 130, 246, 0.15); color: var(--blue-light); }
-        .script-badge.vsl { background: rgba(184, 160, 76, 0.15); color: var(--accent-light); }
-        .script-badge.reel { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
-        .script-scene {
-            padding: 16px 20px; margin-bottom: 12px; border-radius: 12px;
-            border-left: 3px solid var(--accent); background: rgba(184, 160, 76, 0.04);
-        }
-        .script-scene.blue { border-left-color: var(--blue); background: rgba(59, 130, 246, 0.04); }
-        .script-scene.purple { border-left-color: var(--purple); background: rgba(168, 85, 247, 0.04); }
-        .script-scene.green { border-left-color: var(--success); background: rgba(16, 185, 129, 0.04); }
-        .script-scene.red { border-left-color: var(--danger); background: rgba(239, 68, 68, 0.04); }
-        .scene-time {
-            font-family: 'Space Grotesk', monospace; font-size: 11px;
-            color: var(--accent); font-weight: 600; letter-spacing: 1px;
-            text-transform: uppercase; margin-bottom: 6px;
-        }
-        .scene-label {
-            font-weight: 700; font-size: 13px; color: var(--text-secondary);
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
-        }
-        .scene-text { color: var(--text-primary); font-size: 0.95rem; line-height: 1.7; }
-        .scene-direction {
-            font-style: italic; color: var(--text-muted); font-size: 0.85rem;
-            margin-top: 6px;
-        }
-
-        /* === GRID === */
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .tiktok-link:hover { color: var(--tiktok-cyan); transform: translateX(4px); }
 
         /* === HIGHLIGHT BOX === */
         .highlight-box {
-            background: linear-gradient(135deg, rgba(184, 160, 76, 0.08), rgba(184, 160, 76, 0.02));
+            background: linear-gradient(135deg, rgba(184, 160, 76, 0.08), rgba(59, 130, 246, 0.05));
             border: 1px solid rgba(184, 160, 76, 0.2); border-radius: 16px;
-            padding: 28px 32px; margin: 24px 0;
-            animation: glowPulse 3s ease-in-out infinite;
+            padding: 32px; margin-bottom: 32px; position: relative;
         }
-        @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(184, 160, 76, 0.05); }
-            50% { box-shadow: 0 0 30px rgba(184, 160, 76, 0.15); }
-        }
-
-        /* === CTA SECTION === */
-        .cta-section {
-            text-align: center; padding: 80px 32px;
-            background: linear-gradient(180deg, transparent, rgba(184, 160, 76, 0.05), transparent);
-        }
-        .cta-button {
-            display: inline-block; padding: 18px 48px; border-radius: 12px;
-            background: var(--gold-gradient); color: var(--bg-primary);
-            font-weight: 700; font-size: 1.1rem; text-decoration: none;
-            transition: all 0.4s ease; letter-spacing: 0.5px;
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .cta-button:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 40px rgba(184, 160, 76, 0.4);
+        .highlight-box::before {
+            content: ''; position: absolute; top: -1px; left: 20%; right: 20%; height: 2px;
+            background: var(--gold-gradient); border-radius: 2px;
         }
 
-        /* === TABLE === */
-        .styled-table {
-            width: 100%; border-collapse: collapse; margin: 20px 0;
-            background: var(--bg-card); border-radius: 12px; overflow: hidden;
-        }
-        .styled-table th {
-            background: rgba(184, 160, 76, 0.1); color: var(--accent-light);
-            padding: 14px 20px; text-align: left; font-size: 12px;
-            text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
-        }
-        .styled-table td {
-            padding: 14px 20px; border-bottom: 1px solid var(--border);
-            font-size: 0.95rem; color: var(--text-secondary);
-        }
-        .styled-table tr:hover td { background: rgba(255,255,255,0.02); }
+        /* === GRID === */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
 
         /* === PILLAR CARDS === */
         .pillar-card {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 16px; padding: 28px; text-align: center;
+            border-radius: 12px; padding: 24px; text-align: center;
             transition: all 0.4s ease;
         }
-        .pillar-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            border-color: rgba(184, 160, 76, 0.3);
+        .pillar-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(184, 160, 76, 0.1); }
+        .pillar-icon { font-size: 2rem; margin-bottom: 12px; }
+        .pillar-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+        .pillar-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+
+        /* === SCRIPT BLOCKS === */
+        .script-block {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 0; margin-bottom: 28px; overflow: hidden;
+            transition: all 0.4s ease;
         }
-        .pillar-icon { font-size: 2.5rem; margin-bottom: 16px; }
-        .pillar-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
-        .pillar-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+        .script-block:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .script-header {
+            padding: 20px 28px; display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .script-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem; }
+        .script-badge {
+            font-size: 0.7rem; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .script-badge.ad { background: rgba(59, 130, 246, 0.15); color: var(--blue-light); }
+        .script-badge.vsl { background: rgba(184, 160, 76, 0.15); color: var(--accent); }
+        .script-badge.reel { background: rgba(254, 44, 85, 0.15); color: var(--tiktok-pink); }
+        .script-scene {
+            padding: 16px 28px; border-left: 3px solid var(--blue);
+            margin: 0 20px 0 20px; position: relative;
+        }
+        .script-scene + .script-scene { border-top: 1px solid var(--border); }
+        .script-scene.purple { border-left-color: var(--purple); background: rgba(168, 85, 247, 0.03); }
+        .script-scene.green { border-left-color: var(--success); background: rgba(16, 185, 129, 0.03); }
+        .script-scene.gold { border-left-color: var(--accent); background: rgba(184, 160, 76, 0.03); }
+        .script-scene.pink { border-left-color: var(--tiktok-pink); background: rgba(254, 44, 85, 0.03); }
+        .scene-time { font-family: 'Space Grotesk', monospace; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+        .scene-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; }
+        .scene-text { font-size: 0.95rem; color: var(--text-primary); line-height: 1.7; font-style: italic; }
+        .scene-direction { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; font-style: normal; }
+
+        /* === VIRAL FORMULA === */
+        .viral-formula {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            flex-wrap: wrap; padding: 24px; margin: 24px 0;
+            background: rgba(254, 44, 85, 0.05); border-radius: 12px;
+            border: 1px solid rgba(254, 44, 85, 0.15);
+        }
+        .formula-step {
+            background: var(--bg-card); padding: 12px 20px; border-radius: 10px;
+            text-align: center; border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        .formula-step:hover { transform: scale(1.05); border-color: var(--tiktok-pink); }
+        .formula-step .step-num { font-size: 0.7rem; color: var(--tiktok-pink); font-weight: 700; letter-spacing: 1px; }
+        .formula-step .step-name { font-weight: 700; font-size: 0.9rem; margin-top: 4px; }
+        .formula-plus { font-size: 1.5rem; color: var(--tiktok-pink); font-weight: 300; }
+
+        /* === CATEGORY TABS === */
+        .category-label {
+            display: inline-block; padding: 6px 16px; border-radius: 8px;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 20px;
+        }
+        .category-label.retiros { background: rgba(168, 85, 247, 0.12); color: var(--purple); }
+        .category-label.personal { background: rgba(59, 130, 246, 0.12); color: var(--blue-light); }
+        .category-label.viajes { background: rgba(16, 185, 129, 0.12); color: var(--success); }
+        .category-label.bombero { background: rgba(245, 158, 11, 0.12); color: var(--warning); }
+        .category-label.mega { background: rgba(254, 44, 85, 0.12); color: var(--tiktok-pink); }
+
+        /* === METRIC COUNTER === */
+        .metric-row {
+            display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+            margin: 32px 0;
+        }
+        .metric-box {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px 28px; text-align: center;
+            min-width: 140px; transition: all 0.4s;
+        }
+        .metric-box:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .metric-box .metric-value {
+            font-family: 'Space Grotesk', monospace; font-size: 1.6rem; font-weight: 800;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .metric-box .metric-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        /* === CHECKLIST === */
+        .checklist-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; }
+        .check-box {
+            width: 22px; height: 22px; min-width: 22px; border-radius: 6px;
+            border: 2px solid var(--accent); cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; margin-top: 2px;
+        }
+        .check-box.checked { background: var(--accent); }
+        .check-box.checked::after { content: '✓'; color: var(--bg-primary); font-size: 0.75rem; font-weight: 900; }
+        .check-text { font-size: 0.9rem; color: var(--text-secondary); }
+        .check-text strong { color: var(--text-primary); }
+
+        /* === SEPARATOR === */
+        .separator {
+            height: 1px; max-width: 200px; margin: 0 auto;
+            background: var(--gold-gradient); opacity: 0.3;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.2; max-width: 200px; }
+            50% { opacity: 0.5; max-width: 300px; }
+        }
+
+        /* === CTA === */
+        .cta-section { text-align: center; }
+        .cta-button {
+            display: inline-block; padding: 18px 48px; border-radius: 12px;
+            background: var(--gold-gradient); color: var(--bg-primary);
+            font-weight: 800; font-size: 1.05rem; text-decoration: none;
+            letter-spacing: 0.5px; transition: all 0.4s;
+            box-shadow: 0 8px 30px rgba(184, 160, 76, 0.3);
+        }
+        .cta-button:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px rgba(184, 160, 76, 0.5); }
 
         /* === FOOTER === */
         .footer {
             text-align: center; padding: 48px 32px; border-top: 1px solid var(--border);
-            color: var(--text-muted); font-size: 13px;
+            color: var(--text-muted); font-size: 0.8rem;
         }
-        .footer-logo { height: 40px; margin-bottom: 16px; opacity: 0.7; }
+        .footer-logo { height: 40px; opacity: 0.6; margin-bottom: 12px; }
 
-        /* === SCROLL ANIMATIONS === */
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-left { opacity: 0; transform: translateX(-40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .reveal-left.visible { opacity: 1; transform: translateX(0); }
-        .reveal-right { opacity: 0; transform: translateX(40px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .reveal-right.visible { opacity: 1; transform: translateX(0); }
-        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .reveal-scale.visible { opacity: 1; transform: scale(1); }
-        .stagger-children .reveal { transition-delay: calc(var(--i, 0) * 0.1s); }
+        /* === ANIMATIONS === */
+        .reveal, .reveal-left, .reveal-right, .reveal-scale {
+            opacity: 0; transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal { transform: translateY(40px); }
+        .reveal-left { transform: translateX(-40px); }
+        .reveal-right { transform: translateX(40px); }
+        .reveal-scale { transform: scale(0.9); }
+        .reveal.visible, .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible {
+            opacity: 1; transform: translate(0) scale(1);
+        }
+        .stagger-children > * { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .stagger-children.visible > * { opacity: 1; transform: translateY(0); }
+
+        /* === GLOW PULSE === */
+        .glow-pulse { animation: glowPulse 3s ease-in-out infinite; }
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(184, 160, 76, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(184, 160, 76, 0.25); }
+        }
 
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
             .nav-links { display: none; }
-            .hero-meta { flex-direction: column; gap: 16px; }
             .section { padding: 48px 20px; }
-            .card { padding: 24px; }
-            .script-block { padding: 24px; }
-        }
-
-        /* === CHECKLIST === */
-        .checklist-item {
-            display: flex; align-items: flex-start; gap: 14px;
-            padding: 16px 20px; border-radius: 12px; margin-bottom: 10px;
-            background: rgba(255,255,255,0.02); transition: all 0.3s;
-        }
-        .checklist-item:hover { background: rgba(255,255,255,0.04); }
-        .check-box {
-            width: 22px; height: 22px; border: 2px solid var(--accent);
-            border-radius: 6px; flex-shrink: 0; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s; margin-top: 2px;
-        }
-        .check-box.checked { background: var(--accent); }
-        .check-box.checked::after { content: '✓'; color: var(--bg-primary); font-size: 14px; font-weight: 700; }
-        .check-text { font-size: 0.95rem; color: var(--text-secondary); }
-        .check-text strong { color: var(--text-primary); }
-
-        /* === TIMELINE === */
-        .timeline { position: relative; padding-left: 40px; }
-        .timeline::before {
-            content: ''; position: absolute; left: 15px; top: 0; bottom: 0;
-            width: 2px; background: linear-gradient(180deg, var(--accent), var(--blue), var(--purple));
-        }
-        .timeline-item { position: relative; margin-bottom: 32px; }
-        .timeline-dot {
-            position: absolute; left: -33px; top: 4px; width: 14px; height: 14px;
-            border-radius: 50%; background: var(--accent); border: 3px solid var(--bg-primary);
-            box-shadow: 0 0 10px var(--accent-glow);
-        }
-        .timeline-content {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 12px; padding: 20px 24px;
-        }
-        .timeline-label {
-            font-family: 'Space Grotesk', monospace; font-size: 11px;
-            color: var(--accent); font-weight: 600; letter-spacing: 1px;
-            text-transform: uppercase; margin-bottom: 8px;
+            .hero { padding: 100px 20px 60px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .script-scene { margin: 0 12px; padding: 14px 16px; }
+            .script-header { padding: 16px 20px; }
+            .tiktok-header { flex-direction: column; align-items: flex-start; }
+            .hero-meta { gap: 20px; }
+            .viral-formula { gap: 8px; }
+            .formula-step { padding: 8px 14px; }
         }
     </style>
 </head>
@@ -409,47 +411,45 @@
     <div class="bg-aurora"></div>
     <div class="particles" id="particles"></div>
 
-    <!-- NAVIGATION -->
     <nav class="nav" id="nav">
-        <div class="nav-inner">
-            <img src="logo-focus.png" alt="FOCUS Consulting Group" class="nav-logo">
-            <ul class="nav-links">
-                <li><a href="#contexto">Contexto</a></li>
-                <li><a href="#numeros">Números</a></li>
-                <li><a href="#viralizacion">Viralización</a></li>
-                <li><a href="#anuncios">Anuncios</a></li>
-                <li><a href="#vsl">VSL</a></li>
-                <li><a href="#reels">Reels</a></li>
-                <li><a href="#marca">Marca Personal</a></li>
-                <li><a href="#siguiente">Siguiente Paso</a></li>
-            </ul>
-        </div>
+        <a href="#" class="nav-logo"><img src="logo-focus.png" alt="FOCUS"></a>
+        <ul class="nav-links">
+            <li><a href="#virales">Virales</a></li>
+            <li><a href="#estructura">Estructura</a></li>
+            <li><a href="#anuncios">Anuncios</a></li>
+            <li><a href="#vsl">VSL</a></li>
+            <li><a href="#reels">Reels</a></li>
+            <li><a href="#siguiente">Siguiente</a></li>
+        </ul>
     </nav>
 
-    <div class="main">
+    <div style="position: relative; z-index: 1;">
+
         <!-- HERO -->
         <section class="hero">
             <div class="hero-content">
-                <img src="logo-focus.png" alt="FOCUS" class="hero-logo">
+                <img src="logo-focus.png" alt="FOCUS Consulting Group" class="hero-logo">
                 <div class="hero-badge">Plan de Viralización Personalizado</div>
-                <h1>Alberto Güemes<br>& <span class="gold">Diana (Vaidiana)</span></h1>
-                <p class="hero-sub">Documento estratégico de viralización orgánica para Sagrado y Salvaje, Escuela de Vida y Viajes Iniciáticos. Estructuras, guiones y hoja de ruta para construir una audiencia que transforme vidas.</p>
+                <h1>Alberto & Diana<br><span class="gold">Estrategia de Contenido Viral</span></h1>
+                <p class="hero-sub">
+                    Sagrado y Salvaje · Escuela de Vida · Viajes Iniciáticos — Todo lo que necesitáis para explotar en redes con contenido auténtico y estructurado.
+                </p>
                 <div class="hero-meta">
                     <div class="hero-meta-item">
-                        <div class="number">3</div>
-                        <div class="label">Marcas</div>
+                        <div class="value">20+</div>
+                        <div class="label">TikToks Virales Analizados</div>
                     </div>
                     <div class="hero-meta-item">
-                        <div class="number">11</div>
-                        <div class="label">Módulos Escuela</div>
+                        <div class="value">3</div>
+                        <div class="label">Guiones de Anuncios</div>
                     </div>
                     <div class="hero-meta-item">
-                        <div class="number">7</div>
-                        <div class="label">Ediciones Retiro</div>
+                        <div class="value">1</div>
+                        <div class="label">Guión VSL</div>
                     </div>
                     <div class="hero-meta-item">
-                        <div class="number">109</div>
-                        <div class="label">Min. Sesión</div>
+                        <div class="value">6</div>
+                        <div class="label">Guiones de Reels</div>
                     </div>
                 </div>
             </div>
@@ -457,186 +457,387 @@
 
         <div class="separator"></div>
 
-        <!-- SECCIÓN 1: CONTEXTO -->
+        <!-- SECCIÓN 1: CONTEXTO RÁPIDO -->
         <section class="section" id="contexto">
             <div class="section-header reveal">
                 <div class="section-number">01 — Contexto</div>
                 <h2 class="section-title">Vuestro Proyecto y Visión</h2>
-                <p class="section-subtitle">Todo lo que necesitamos saber para construir la estrategia perfecta</p>
             </div>
 
-            <div class="card reveal">
-                <div class="card-title">🏔️ Quiénes Sois</div>
-                <p style="color: var(--text-secondary); margin-bottom: 16px;">
-                    <strong style="color: var(--text-primary);">Alberto Güemes</strong> — Bombero con 21 años de servicio, osteópata, formado en Reiki, yoga, registros akásicos, PNL, hipnosis y terapia regresiva. Voluntario 46 días en la DANA de Valencia, gestionando más de 700.000€ en ayudas. Medalla al mérito y al honor. Autor de un libro sobre el ego pendiente de publicar.
-                </p>
-                <p style="color: var(--text-secondary);">
-                    <strong style="color: var(--text-primary);">Diana (Vaidiana Quintas)</strong> — Organizadora de viajes iniciáticos a Glastonbury (Inglaterra), uno de los lugares más energéticos del planeta. Ex gimnasta. Especialista en la parte sagrada y espiritual del proyecto. Cuenta de Instagram: @vaidianaquintas.
-                </p>
+            <div class="grid-2 stagger-children reveal">
+                <div class="card">
+                    <div class="card-title">Alberto Güemes</div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;">
+                        <strong style="color: var(--text-primary);">Bombero 21 años</strong>, osteópata, terapeuta y formador. Su padre estuvo 15 años en coma, su madre en silla de ruedas. Desde los 16 años se formó solo: PNL, hipnosis, terapia Gestalt, bioneuroemoción. Ha creado <strong style="color: var(--accent);">Sagrado y Salvaje</strong> (retiros de alto impacto con 7 ediciones) y la <strong style="color: var(--accent);">Escuela de Vida</strong> (formación online de 9 semanas). Estuvo 46 días como voluntario en la DANA de Valencia.
+                    </p>
+                </div>
+                <div class="card">
+                    <div class="card-title">Diana (Vaidiana Quintas)</div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;">
+                        <strong style="color: var(--text-primary);">Profesora de yoga</strong>, terapeuta y guía espiritual. Organiza <strong style="color: var(--accent);">viajes iniciáticos a Glastonbury, Stonehenge y Colombia</strong>. Experta en meditación, ceremonias y trabajo energético. Co-creadora de Sagrado y Salvaje junto a Alberto. Su perfil de Instagram es <strong style="color: var(--accent);">@vaidiana_quintas</strong>.
+                    </p>
+                </div>
             </div>
 
-            <div class="grid-2 stagger-children">
-                <div class="card reveal" style="--i: 0">
-                    <div class="card-title">⚡ Sagrado y Salvaje</div>
-                    <p style="color: var(--text-secondary);">
-                        Retiros de fin de semana (viernes a domingo) con dinámicas de alto impacto: caminar sobre cristales, romper flechas con el cuello, caída de confianza desde 2,5 metros, sesiones de respiración, trabajo con la culpa, el perdón, la confianza y el poder personal. <strong style="color: var(--text-primary);">7 ediciones en 2 años</strong> con testimonios extraordinarios.
-                    </p>
+            <div class="metric-row reveal">
+                <div class="metric-box">
+                    <div class="metric-value">7</div>
+                    <div class="metric-label">Ediciones S&S</div>
                 </div>
-                <div class="card reveal" style="--i: 1">
-                    <div class="card-title">📚 Escuela de Vida</div>
-                    <p style="color: var(--text-secondary);">
-                        Programa online de <strong style="color: var(--text-primary);">11 módulos</strong> en 5,5 semanas (martes y sábados). Cada módulo incluye cuaderno de ejercicios. Trabaja heridas emocionales, creencias limitantes, gestión emocional. Impartido principalmente por Alberto. El complemento perfecto post-retiro para dar continuidad al cambio.
-                    </p>
+                <div class="metric-box">
+                    <div class="metric-value">100+</div>
+                    <div class="metric-label">Testimonios</div>
                 </div>
-                <div class="card reveal" style="--i: 2">
-                    <div class="card-title">🌍 Viajes Iniciáticos</div>
-                    <p style="color: var(--text-secondary);">
-                        Viajes a <strong style="color: var(--text-primary);">Glastonbury y Stonehenge</strong> (Inglaterra) organizados por Diana. Experiencias en uno de los lugares más energéticos del planeta. Se suelen llenar todos. Muchos asistentes vienen de Sagrado y Salvaje, creando un ecosistema de fidelidad extraordinario.
-                    </p>
+                <div class="metric-box">
+                    <div class="metric-value">9 sem</div>
+                    <div class="metric-label">Escuela de Vida</div>
                 </div>
-                <div class="card reveal" style="--i: 3">
-                    <div class="card-title">🎯 Objetivo Principal</div>
-                    <p style="color: var(--text-secondary);">
-                        Pasar de llegar a <strong style="color: var(--text-primary);">20-30 personas por edición</strong> a impactar a miles. No es solo una cuestión económica: es la convicción de que todo lo que tenéis que entregar puede llegar a muchas más personas. El dinero será una consecuencia de ayudar a escala.
-                    </p>
+                <div class="metric-box">
+                    <div class="metric-value">46 días</div>
+                    <div class="metric-label">Voluntario DANA</div>
                 </div>
             </div>
         </section>
 
         <div class="separator"></div>
 
-        <!-- SECCIÓN 2: NÚMEROS CLAVE -->
-        <section class="section" id="numeros">
+        <!-- SECCIÓN 2: TIKTOKS VIRALES DE REFERENCIA -->
+        <section class="section" id="virales">
             <div class="section-header reveal">
-                <div class="section-number">02 — Números Clave</div>
-                <h2 class="section-title">Radiografía del Negocio</h2>
-                <p class="section-subtitle">Datos actuales para dimensionar la oportunidad de crecimiento</p>
+                <div class="section-number">02 — TikToks Virales de Referencia</div>
+                <h2 class="section-title">Estudia Estas Estructuras Virales</h2>
+                <p class="section-subtitle">20 TikToks reales con +10.000 likes que encajan con vuestro sector. No copiéis el contenido, copiad la ESTRUCTURA.</p>
             </div>
 
-            <div class="kpi-grid stagger-children">
-                <div class="kpi-card reveal" style="--i: 0">
-                    <div class="kpi-value">490€</div>
-                    <div class="kpi-label">Ticket Retiro Sagrado y Salvaje</div>
-                </div>
-                <div class="kpi-card reveal" style="--i: 1">
-                    <div class="kpi-value">350€</div>
-                    <div class="kpi-label">Ticket Escuela de Vida</div>
-                </div>
-                <div class="kpi-card reveal" style="--i: 2">
-                    <div class="kpi-value">~2.000€</div>
-                    <div class="kpi-label">Beneficio Neto por Retiro</div>
-                </div>
-                <div class="kpi-card reveal" style="--i: 3">
-                    <div class="kpi-value">2-3/año</div>
-                    <div class="kpi-label">Retiros Anuales</div>
-                </div>
-                <div class="kpi-card reveal" style="--i: 4">
-                    <div class="kpi-value">7</div>
-                    <div class="kpi-label">Ediciones Realizadas</div>
-                </div>
-                <div class="kpi-card reveal" style="--i: 5">
-                    <div class="kpi-value">~600</div>
-                    <div class="kpi-label">Seguidores Alberto (IG)</div>
-                </div>
-            </div>
-
-            <div class="highlight-box reveal">
-                <p style="color: var(--text-secondary); font-size: 0.95rem;">
-                    <strong style="color: var(--accent);">Oportunidad clave:</strong> Tenéis un producto extraordinario con testimonios brutales, pero la audiencia actual es muy reducida. Con la estrategia de viralización orgánica, el potencial de escalar la Escuela de Vida y los retiros es enorme. Cada reel viral puede traer cientos de seguidores cualificados que ya conectan con vuestro mensaje antes de comprar.
+            <div class="highlight-box reveal glow-pulse">
+                <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.8; text-align: center;">
+                    <strong style="color: var(--accent); font-size: 1.1rem;">La regla de oro de la viralización:</strong><br>
+                    No se copia el contenido. Se copia la <strong style="color: var(--text-primary);">ESTRUCTURA</strong>. Es como una botella en el océano: lo que importa es el envase (la estructura), no lo de dentro. Vuestro conocimiento ya es extraordinario. Solo hay que encontrar las botellas correctas que flotan y llenarlas con vuestro contenido.
                 </p>
             </div>
 
-            <table class="styled-table reveal">
-                <thead>
-                    <tr>
-                        <th>Servicio</th>
-                        <th>Precio Actual</th>
-                        <th>Capacidad</th>
-                        <th>Frecuencia</th>
-                        <th>Formato</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong style="color: var(--text-primary);">Sagrado y Salvaje</strong></td>
-                        <td>490€</td>
-                        <td>15-20 personas</td>
-                        <td>2-3 al año</td>
-                        <td>Presencial (fin de semana)</td>
-                    </tr>
-                    <tr>
-                        <td><strong style="color: var(--text-primary);">Escuela de Vida</strong></td>
-                        <td>350€</td>
-                        <td>Ilimitada (online)</td>
-                        <td>Por ediciones</td>
-                        <td>Online (Zoom, 11 módulos)</td>
-                    </tr>
-                    <tr>
-                        <td><strong style="color: var(--text-primary);">Viajes Iniciáticos</strong></td>
-                        <td>Variable</td>
-                        <td>Grupos reducidos</td>
-                        <td>Varios al año</td>
-                        <td>Presencial (Inglaterra)</td>
-                    </tr>
-                    <tr>
-                        <td><strong style="color: var(--text-primary);">Consultas 1 a 1</strong></td>
-                        <td>Variable</td>
-                        <td>Individual</td>
-                        <td>Bajo demanda</td>
-                        <td>Presencial/Online</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- CATEGORÍA 1: DESARROLLO PERSONAL -->
+            <div class="category-label personal reveal">Desarrollo Personal / Superar Miedos</div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@thejordisegues</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">1.1M likes</span>
+                        <span class="tiktok-stat views">17.6M views</span>
+                        <span class="tiktok-stat followers">3M followers</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Poner límites no es ser mala persona. Es respetarse más."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Hook directo con frase impactante + desarrollo con ejemplos reales + cierre reflexivo que invita a la acción</div>
+                <div class="tiktok-fit">Encaja con Sagrado y Salvaje: el tema de límites es exactamente lo que trabajáis en los retiros. Alberto puede hacer este mismo formato hablando de las máscaras que nos ponemos.</div>
+                <a href="https://www.tiktok.com/@thejordisegues" target="_blank" class="tiktok-link">Ver perfil en TikTok →</a>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@estefaniamarroquinl</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">886.2K likes</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Ya no eres la misma de antes." — Transformación personal</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Antes/después emocional + narración en primera persona + música emotiva de fondo. Sin edición compleja.</div>
+                <div class="tiktok-fit">Modelo perfecto para testimonios post-retiro. Pedid a los asistentes de Sagrado y Salvaje que graben un "antes y después" emocional.</div>
+                <a href="https://www.tiktok.com/@estefaniamarroquinl/video/7569031405477416200" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@trayectoestoico</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">495.3K likes</span>
+                        <span class="tiktok-stat views">4.4M views</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Cada día construye en silencio."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Frase potente en pantalla + imágenes cinemáticas + música épica. Formato "hopecore" de superación.</div>
+                <div class="tiktok-fit">Alberto puede hacer este formato con imágenes de los retiros, de su trabajo como bombero, de la DANA. Superación silenciosa = su historia.</div>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@mentalidadseiko</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">325.5K likes</span>
+                        <span class="tiktok-stat views">4M views</span>
+                        <span class="tiktok-stat followers">1.5M followers</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Tu mundo empieza en tu mente."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Resumen con puntos clave numerados + explicación experta + CTA al final. Formato educativo.</div>
+                <div class="tiktok-fit">Perfecto para contenido de la Escuela de Vida. Alberto puede hacer "3 creencias limitantes que te están destruyendo" con este formato.</div>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@menteimparable3</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">11.4K likes</span>
+                        <span class="tiktok-stat views">425.9K views</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Nadie puede destruirte excepto tus propios pensamientos."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Metáfora poderosa (hierro/óxido) + desarrollo narrativo + reflexión final. Formato storytelling.</div>
+                <div class="tiktok-fit">Alberto es experto en metáforas de la vida real. Puede usar su experiencia como bombero para crear metáforas sobre el fuego interior.</div>
+            </div>
+
+            <!-- CATEGORÍA 2: RETIROS -->
+            <div class="category-label retiros reveal" style="margin-top: 40px;">Retiros / Experiencias Transformadoras</div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@domeyepezcastro</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">Viral</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"No es solo una caminata sobre fuego y vidrio… Es un recordatorio de que cuando tienes un propósito claro, no hay obstáculo."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Experiencia en vivo grabada + narración emotiva en off + reflexión profunda al final</div>
+                <div class="tiktok-fit">EXACTAMENTE lo que hacéis en Sagrado y Salvaje. Grabad las caminatas sobre cristales y fuego. Este tipo de contenido es ORO viral.</div>
+                <a href="https://www.tiktok.com/@domeyepezcastro/video/7490231507613797640" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@therrodriguez</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">Viral</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Un retiro espiritual transformó mi vida."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Testimonio personal + antes/después + emoción genuina sin filtros. Formato confesión.</div>
+                <div class="tiktok-fit">Modelo exacto para testimonios de asistentes a Sagrado y Salvaje. Pedid que graben un video de 30 segundos al terminar el retiro.</div>
+                <a href="https://www.tiktok.com/@therrodriguez/video/7537309961504804118" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@beverlyramosr</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">Viral</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Un retiro de transformación y liberación no solo se vive, se siente."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Montaje de imágenes del retiro + música emotiva + CTA "Comenta [palabra] si quieres saber más"</div>
+                <div class="tiktok-fit">Modelo para grabar contenido DURANTE los retiros. Cread un montaje de 15-30 segundos con los mejores momentos de cada edición.</div>
+                <a href="https://www.tiktok.com/@beverlyramosr/video/7605699872762760456" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <!-- CATEGORÍA 3: VIAJES ESPIRITUALES -->
+            <div class="category-label viajes reveal" style="margin-top: 40px;">Viajes Espirituales — Para Diana</div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@institutoarima</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">Viral</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Nos vamos con un bus privado desde Glastonbury hacia Stonehenge y Avebury."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Imágenes del lugar sagrado + narración mística + información práctica del viaje + CTA para apuntarse</div>
+                <div class="tiktok-fit">EXACTAMENTE lo que hace Diana. Grabad cada viaje a Glastonbury/Stonehenge. Cada paisaje, cada momento de grupo, cada ceremonia.</div>
+                <a href="https://www.tiktok.com/@institutoarima/video/7392574349502467360" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@magicamatista</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">Viral</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"Siempre quise conocer Stonehenge y fue tan hermoso y energético, místico como siempre lo imaginé."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Fotos/video del lugar + narración personal emotiva + sentimiento de asombro</div>
+                <div class="tiktok-fit">Diana puede hacer exactamente esto: "La primera vez que pisé Glastonbury sentí que el suelo vibraba." Contenido visual + emoción = viral.</div>
+                <a href="https://www.tiktok.com/@magicamatista/photo/7603177978901564692" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <!-- CATEGORÍA 4: BOMBEROS -->
+            <div class="category-label bombero reveal" style="margin-top: 40px;">Bomberos / Historias Personales — Para Alberto</div>
+
+            <div class="tiktok-card reveal">
+                <div class="tiktok-header">
+                    <span class="tiktok-handle">@loshombres.si.lloran</span>
+                    <div class="tiktok-stats">
+                        <span class="tiktok-stat likes">Viral</span>
+                    </div>
+                </div>
+                <div class="tiktok-quote">"La carga emocional de ser bombero: historias reales."</div>
+                <div class="tiktok-structure"><strong>Estructura:</strong> Entrevista/testimonio vulnerable + tema de salud mental masculina + emoción real sin filtros</div>
+                <div class="tiktok-fit">Alberto lleva 21 años como bombero. Puede hablar de la carga emocional, de lo que no se cuenta, de cómo eso le llevó a crear Sagrado y Salvaje.</div>
+                <a href="https://www.tiktok.com/@loshombres.si.lloran/video/7537879296539380997" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <!-- CATEGORÍA 5: MEGA VIRALES -->
+            <div class="category-label mega reveal" style="margin-top: 40px;">Mega Virales (+100K likes) — Estructuras a Copiar</div>
+
+            <div class="grid-2 stagger-children reveal">
+                <div class="tiktok-card">
+                    <div class="tiktok-header">
+                        <span class="tiktok-handle">@amor_propioh</span>
+                        <div class="tiktok-stats">
+                            <span class="tiktok-stat likes">113.1K likes</span>
+                            <span class="tiktok-stat views">4.6M views</span>
+                        </div>
+                    </div>
+                    <div class="tiktok-quote">"Después de mil heridas."</div>
+                    <div class="tiktok-structure"><strong>Estructura:</strong> Texto en pantalla + música emotiva + frases cortas impactantes. Sin hablar a cámara.</div>
+                    <div class="tiktok-fit">Formato fácil de replicar para días sin energía. Solo texto + música + fondo bonito.</div>
+                </div>
+                <div class="tiktok-card">
+                    <div class="tiktok-header">
+                        <span class="tiktok-handle">@silenzio7_</span>
+                        <div class="tiktok-stats">
+                            <span class="tiktok-stat likes">280.8K likes</span>
+                            <span class="tiktok-stat views">5.4M views</span>
+                        </div>
+                    </div>
+                    <div class="tiktok-quote">"Siempre hay opción."</div>
+                    <div class="tiktok-structure"><strong>Estructura:</strong> Clip de serie/película + texto motivacional superpuesto + música épica</div>
+                    <div class="tiktok-fit">Usar clips de películas motivacionales con frases de Alberto sobre superación.</div>
+                </div>
+                <div class="tiktok-card">
+                    <div class="tiktok-header">
+                        <span class="tiktok-handle">@rebelionmentalx</span>
+                        <div class="tiktok-stats">
+                            <span class="tiktok-stat likes">219.6K likes</span>
+                            <span class="tiktok-stat views">5.5M views</span>
+                        </div>
+                    </div>
+                    <div class="tiktok-quote">"Frases cortas pero ciertas."</div>
+                    <div class="tiktok-structure"><strong>Estructura:</strong> Texto en pantalla + fondo minimalista + música + frases impactantes una tras otra</div>
+                    <div class="tiktok-fit">Alberto tiene frases potentísimas. Recopilar las mejores y hacer carruseles de frases con música.</div>
+                </div>
+                <div class="tiktok-card">
+                    <div class="tiktok-header">
+                        <span class="tiktok-handle">@abc.es (DANA)</span>
+                        <div class="tiktok-stats">
+                            <span class="tiktok-stat likes">Viral</span>
+                        </div>
+                    </div>
+                    <div class="tiktok-quote">"Miles de voluntarios ayudando a los afectados por la DANA."</div>
+                    <div class="tiktok-structure"><strong>Estructura:</strong> Imágenes reales + narración emotiva + solidaridad + impacto visual</div>
+                    <div class="tiktok-fit">Alberto estuvo 46 días en Valencia. Tiene material para hacer contenido viral sobre solidaridad y propósito de vida.</div>
+                    <a href="https://www.tiktok.com/@abc.es/video/7432613741616745760" target="_blank" class="tiktok-link">Ver TikTok →</a>
+                </div>
+            </div>
+
+            <!-- REFERENTES -->
+            <div class="card reveal" style="margin-top: 40px;">
+                <div class="card-title">Referentes a Seguir y Estudiar</div>
+                <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9rem;">Estos creadores son vuestros referentes directos. Estudiad sus estructuras, no su contenido.</p>
+                <div class="grid-3" style="margin-top: 16px;">
+                    <div class="pillar-card">
+                        <div class="pillar-icon">🎯</div>
+                        <div class="pillar-title">@jorgecarrascoh</div>
+                        <div class="pillar-desc">272K followers · 1.4M likes. Investigador y divulgador. Creador del Método de Reprogramación Consciente. Referente directo en vuestro sector.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">🚀</div>
+                        <div class="pillar-title">@adriasolapastor</div>
+                        <div class="pillar-desc">565K followers · 6.3M likes. Emprendedor y experto en comunicación. Maestro del hook y la estructura viral en español.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">👑</div>
+                        <div class="pillar-title">@thejordisegues</div>
+                        <div class="pillar-desc">3M followers · 28.7M likes. El rey de la viralización en español. Su masterclass de virales es obligatoria.</div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <div class="separator"></div>
 
-        <!-- SECCIÓN 3: ESTRATEGIA DE VIRALIZACIÓN -->
-        <section class="section" id="viralizacion">
+        <!-- SECCIÓN 3: FÓRMULA VIRAL -->
+        <section class="section" id="estructura">
             <div class="section-header reveal">
-                <div class="section-number">03 — Estrategia de Viralización</div>
-                <h2 class="section-title">El Motor de Crecimiento Orgánico</h2>
-                <p class="section-subtitle">La viralización no es suerte. Es estructura + constancia + autenticidad</p>
+                <div class="section-number">03 — La Fórmula Viral</div>
+                <h2 class="section-title">Estructura que Funciona</h2>
+                <p class="section-subtitle">La ciencia detrás de cada reel que se hace viral. Memorizad esta fórmula.</p>
             </div>
 
-            <div class="highlight-box reveal">
-                <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.8;">
-                    <strong style="color: var(--accent); font-size: 1.1rem;">La regla de oro:</strong><br>
-                    El mayor crecimiento que vais a experimentar no vendrá de los anuncios ni del embudo de ventas. Vendrá de la <strong style="color: var(--text-primary);">audiencia orgánica</strong> que construyáis subiendo contenido de valor cada día. Es hiper exponencial: ayudáis a más personas Y conseguís más clientes. Las dos cosas a la vez.
-                </p>
+            <div class="viral-formula reveal">
+                <div class="formula-step">
+                    <div class="step-num">PASO 1</div>
+                    <div class="step-name">HOOK</div>
+                </div>
+                <div class="formula-plus">+</div>
+                <div class="formula-step">
+                    <div class="step-num">PASO 2</div>
+                    <div class="step-name">TENSIÓN</div>
+                </div>
+                <div class="formula-plus">+</div>
+                <div class="formula-step">
+                    <div class="step-num">PASO 3</div>
+                    <div class="step-name">VALOR</div>
+                </div>
+                <div class="formula-plus">+</div>
+                <div class="formula-step">
+                    <div class="step-num">PASO 4</div>
+                    <div class="step-name">RESULTADO</div>
+                </div>
+                <div class="formula-plus">+</div>
+                <div class="formula-step">
+                    <div class="step-num">PASO 5</div>
+                    <div class="step-name">CTA</div>
+                </div>
             </div>
 
-            <div class="card reveal">
-                <div class="card-title">🧪 La Ciencia de la Viralización</div>
-                <p style="color: var(--text-secondary); margin-bottom: 16px;">
-                    La viralización <strong style="color: var(--text-primary);">no depende de la persona, sino de la estructura y el mensaje</strong>. Es como una botella en el océano: lo que importa es el envase (la estructura), no lo de dentro (vuestro conocimiento ya es extraordinario). Hay que encontrar las botellas correctas que flotan y llenarlas con vuestro contenido.
-                </p>
-                <p style="color: var(--text-secondary);">
-                    Cuando un reel se hace viral, no es casualidad. Es porque la estructura ha retenido al espectador y ha generado engagement. Hay que identificar esos patrones y replicarlos con vuestro conocimiento único.
-                </p>
+            <div class="grid-2 stagger-children reveal">
+                <div class="card">
+                    <div class="card-title">El Hook (0-3 segundos)</div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;">
+                        Los primeros 3 segundos deciden si el espectador se queda o se va. El hook debe ser una <strong style="color: var(--tiktok-pink);">frase que genere curiosidad, controversia o emoción</strong>. Ejemplos que funcionan:
+                    </p>
+                    <ul style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 12px; padding-left: 20px; line-height: 2;">
+                        <li>"Mi padre estuvo 15 años en coma..."</li>
+                        <li>"Llevo 21 años como bombero y esto nunca lo cuento..."</li>
+                        <li>"Hay un lugar en Inglaterra donde la energía cambia a las personas..."</li>
+                        <li>"Un asistente a nuestro retiro dijo: esto lo deberían recetar..."</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title">La Retención (3-30 segundos)</div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.8;">
+                        Después del hook, hay que mantener la atención con <strong style="color: var(--tiktok-cyan);">tensión narrativa + valor real</strong>. Técnicas:
+                    </p>
+                    <ul style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 12px; padding-left: 20px; line-height: 2;">
+                        <li>Cortes dinámicos cada 3-5 segundos</li>
+                        <li>Cambios de plano (primer plano → plano medio)</li>
+                        <li>Texto en pantalla reforzando lo que dices</li>
+                        <li>Música que sube de intensidad</li>
+                        <li>Storytelling: problema → lucha → solución</li>
+                    </ul>
+                </div>
             </div>
 
-            <div class="grid-3 stagger-children" style="margin-top: 32px;">
-                <div class="pillar-card reveal" style="--i: 0">
+            <div class="grid-3 stagger-children reveal" style="margin-top: 24px;">
+                <div class="pillar-card">
                     <div class="pillar-icon">📱</div>
                     <div class="pillar-title">1 Reel Diario</div>
-                    <div class="pillar-desc">Misma hora, cada día, sin excepción. Los primeros 40 días no veréis resultados. A los ~60 publicaciones llegará el primer viral. Desapego total del resultado.</div>
+                    <div class="pillar-desc">Misma hora, cada día, sin excepción. Los primeros 40 días no veréis resultados. A los ~60 publicaciones llegará el primer viral. Desapego total.</div>
                 </div>
-                <div class="pillar-card reveal" style="--i: 1">
-                    <div class="pillar-icon">🏗️</div>
-                    <div class="pillar-title">Estructura Viral</div>
-                    <div class="pillar-desc">No copiar contenido, copiar la ESTRUCTURA. Hook potente + desarrollo de valor + CTA. Usar formatos que ya han funcionado en vuestro sector y llenarlos con vuestro conocimiento.</div>
+                <div class="pillar-card">
+                    <div class="pillar-icon">🔄</div>
+                    <div class="pillar-title">TikTok + Instagram</div>
+                    <div class="pillar-desc">Subid el mismo contenido a ambas plataformas simultáneamente. El algoritmo de TikTok es más generoso al principio. Instagram consolida la audiencia.</div>
                 </div>
-                <div class="pillar-card reveal" style="--i: 2">
+                <div class="pillar-card">
                     <div class="pillar-icon">👨‍👩‍👧‍👦</div>
                     <div class="pillar-title">Sesgo de Familiaridad</div>
-                    <div class="pillar-desc">Cuando alguien te ve cada día, te conviertes en familia. Es muchísimo más probable que te compre alguien familiar. Subir contenido diario = construir una familia online.</div>
+                    <div class="pillar-desc">Cuando alguien te ve cada día, te conviertes en familia. Es muchísimo más probable que te compre alguien familiar. Contenido diario = familia online.</div>
                 </div>
             </div>
 
             <div class="card reveal" style="margin-top: 32px;">
-                <div class="card-title">🎯 Reglas de Viralización</div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 16px;">
+                <div class="card-title">Reglas de Viralización</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 16px;">
                     <div class="checklist-item">
                         <div class="check-box" onclick="this.classList.toggle('checked')"></div>
                         <div class="check-text"><strong>1 pieza de contenido diaria</strong> a la misma hora</div>
@@ -655,11 +856,49 @@
                     </div>
                     <div class="checklist-item">
                         <div class="check-box" onclick="this.classList.toggle('checked')"></div>
-                        <div class="check-text"><strong>Instagram Reels + TikTok</strong> simultáneamente</div>
+                        <div class="check-text"><strong>Grabar testimonios</strong> en cada retiro sin excepción</div>
                     </div>
                     <div class="checklist-item">
                         <div class="check-box" onclick="this.classList.toggle('checked')"></div>
-                        <div class="check-text"><strong>Usar testimonios grabados</strong> de retiros</div>
+                        <div class="check-text"><strong>Estudiar los TikToks de arriba</strong> antes de grabar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PILARES DE CONTENIDO -->
+            <div class="card reveal" style="margin-top: 32px;">
+                <div class="card-title">6 Pilares de Contenido</div>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">Cada día, elegid uno de estos pilares y cread un reel con la estructura viral.</p>
+                <div class="grid-3">
+                    <div class="pillar-card">
+                        <div class="pillar-icon">💔</div>
+                        <div class="pillar-title">Heridas y Sanación</div>
+                        <div class="pillar-desc">Heridas emocionales, creencias limitantes, perdón, culpa. Conecta profundamente porque todos lo hemos vivido.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">🛠️</div>
+                        <div class="pillar-title">Herramientas Prácticas</div>
+                        <div class="pillar-desc">Ejercicios concretos, técnicas de respiración, protocolos de gestión emocional. Que la gente pueda aplicarlo HOY.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">📖</div>
+                        <div class="pillar-title">Historia Personal</div>
+                        <div class="pillar-desc">El coma del padre, la enfermedad de la madre, Valencia, los retiros. Vulnerabilidad = conexión máxima.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">🎬</div>
+                        <div class="pillar-title">Behind the Scenes</div>
+                        <div class="pillar-desc">Momentos de los retiros, preparación, viajes a Inglaterra, el día a día como bombero + terapeuta.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">💬</div>
+                        <div class="pillar-title">Testimonios</div>
+                        <div class="pillar-desc">Tenéis cientos de testimonios grabados. Un testimonio real vale más que mil palabras vuestras. Uno por semana mínimo.</div>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-icon">🌍</div>
+                        <div class="pillar-title">Lugares Sagrados</div>
+                        <div class="pillar-desc">Glastonbury, Stonehenge, Colombia. Contenido visual de los viajes que genera curiosidad y deseo.</div>
                     </div>
                 </div>
             </div>
@@ -667,127 +906,102 @@
 
         <div class="separator"></div>
 
-        <!-- SECCIÓN 4: GUIONES DE ANUNCIOS -->
+        <!-- SECCIÓN 4: GUIONES DE ANUNCIOS PAIN FIRST -->
         <section class="section" id="anuncios">
             <div class="section-header reveal">
                 <div class="section-number">04 — Guiones de Anuncios</div>
                 <h2 class="section-title">Anuncios Meta Ads — Pain First</h2>
-                <p class="section-subtitle">3 guiones listos para grabar con estrategia de dolor primero</p>
+                <p class="section-subtitle">3 guiones listos para grabar. Estrategia de dolor primero: el espectador siente el dolor antes de ver la solución.</p>
             </div>
 
             <!-- ANUNCIO 1 -->
-            <div class="script-block ad reveal">
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Anuncio 1: "El Vacío Después del Subidón"</div>
-                    <div class="script-badge ad">META ADS · 45-60s</div>
+                    <div class="script-badge ad">META ADS · 45-60s · ESCUELA DE VIDA</div>
                 </div>
-                <div class="script-scene red">
-                    <div class="scene-time">0-3 segundos</div>
-                    <div class="scene-label">HOOK (Dolor)</div>
-                    <div class="scene-text">"¿Alguna vez has ido a un evento de crecimiento personal, te has sentido increíble... y a las dos semanas has vuelto exactamente al mismo punto?"</div>
-                    <div class="scene-direction">[Alberto mirando a cámara, primer plano, fondo neutro. Expresión seria y empática.]</div>
+                <div class="script-scene purple">
+                    <div class="scene-time">0-5 segundos</div>
+                    <div class="scene-label">HOOK — DOLOR</div>
+                    <div class="scene-text">"¿Alguna vez has sentido que por fuera todo va bien... pero por dentro hay un vacío que no se llena con nada?"</div>
+                    <div class="scene-direction">[Alberto a cámara, primer plano. Fondo oscuro. Tono íntimo, casi susurrando. Pausa de 1 segundo después.]</div>
                 </div>
                 <div class="script-scene">
-                    <div class="scene-time">3-12 segundos</div>
-                    <div class="scene-label">AMPLIFICACIÓN DEL DOLOR</div>
-                    <div class="scene-text">"Ese subidón del fin de semana se desvanece. Los mensajes del grupo bajan. Y tú vuelves a tu día a día con tu madre que te irrita, con tu trabajo que te ahoga, con las mismas creencias que te tenían atrapado. Y piensas: ¿para qué sirvió todo eso?"</div>
-                    <div class="scene-direction">[Planos de situaciones cotidianas: alguien mirando el móvil sin mensajes, en el trabajo agobiado, discusión familiar.]</div>
-                </div>
-                <div class="script-scene blue">
-                    <div class="scene-time">12-18 segundos</div>
-                    <div class="scene-label">TRANSICIÓN</div>
-                    <div class="scene-text">"El problema no eres tú. El problema es que nadie te dio las herramientas para mantener ese cambio. Hasta ahora."</div>
-                    <div class="scene-direction">[Cambio de plano. Alberto en un espacio luminoso, más cercano.]</div>
+                    <div class="scene-time">5-20 segundos</div>
+                    <div class="scene-label">AGITACIÓN DEL DOLOR</div>
+                    <div class="scene-text">"Yo lo viví. Con 16 años mi padre entró en coma. Mi madre en silla de ruedas. Mi hermano se fue. Y yo me puse la máscara del fuerte. Bombero, el que siempre ayuda, el que nunca se queja. Pero por dentro me estaba destruyendo. Y lo peor es que ni siquiera lo sabía. Porque cuando llevas tanto tiempo con la máscara puesta... ya no sabes quién eres sin ella."</div>
+                    <div class="scene-direction">[Cortes dinámicos cada 5 segundos. Imágenes de Alberto de bombero intercaladas. Música tensa de fondo.]</div>
                 </div>
                 <div class="script-scene green">
-                    <div class="scene-time">18-40 segundos</div>
-                    <div class="scene-label">SOLUCIÓN</div>
-                    <div class="scene-text">"Soy Alberto, bombero y terapeuta. Llevo más de 20 años formándome en herramientas de transformación real: PNL, hipnosis, dinámicas de alto impacto. He creado la Escuela de Vida: 11 módulos en 5 semanas donde no solo experimentas el cambio, sino que te llevas las herramientas para mantenerlo cada día. Un cuaderno de ejercicios por módulo. Trabajo real, no motivación vacía."</div>
-                    <div class="scene-direction">[Imágenes de la Escuela de Vida, cuadernos, Alberto enseñando, testimonios en pantalla.]</div>
+                    <div class="scene-time">20-40 segundos</div>
+                    <div class="scene-label">SOLUCIÓN + PRUEBA</div>
+                    <div class="scene-text">"Después de 20 años formándome en PNL, hipnosis, Gestalt, bioneuroemoción... creé un programa de 9 semanas donde te doy las herramientas exactas que a mí me salvaron la vida. No es terapia. No es coaching. Es un sistema práctico para identificar tus heridas, entender tus patrones y transformarlos. 7 ediciones de retiros. Cientos de testimonios. Y ahora está disponible online."</div>
+                    <div class="scene-direction">[Imágenes de retiros, testimonios, Alberto enseñando. Música cambia a esperanzadora.]</div>
                 </div>
-                <div class="script-scene">
+                <div class="script-scene gold">
                     <div class="scene-time">40-50 segundos</div>
-                    <div class="scene-label">PRUEBA SOCIAL</div>
-                    <div class="scene-text">"Gente que ha estado con los mejores formadores de España nos dice: 'Lo que vosotros entregáis no se compara con nada.' 7 ediciones de retiros, cientos de testimonios. Esto funciona."</div>
-                    <div class="scene-direction">[Montaje rápido de testimonios reales, caras emocionadas, abrazos post-retiro.]</div>
-                </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
-                    <div class="scene-time">50-60 segundos</div>
                     <div class="scene-label">CTA</div>
-                    <div class="scene-text">"Si estás cansado de cambios que no duran, escribe ESCUELA en los comentarios y te cuento cómo funciona."</div>
-                    <div class="scene-direction">[Alberto mirando a cámara con convicción. Texto en pantalla: "Escribe ESCUELA".]</div>
+                    <div class="scene-text">"Si esto te resuena, haz clic en el enlace. La primera sesión es gratuita. Y si no es para ti, al menos te llevarás herramientas que puedes usar hoy mismo."</div>
+                    <div class="scene-direction">[Alberto mirando a cámara con convicción. Texto en pantalla: "PRIMERA SESIÓN GRATIS" + enlace.]</div>
                 </div>
             </div>
 
             <!-- ANUNCIO 2 -->
-            <div class="script-block ad reveal">
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Anuncio 2: "Las Máscaras que Te Están Matando"</div>
-                    <div class="script-badge ad">META ADS · 45-60s</div>
+                    <div class="script-badge ad">META ADS · 45-60s · SAGRADO Y SALVAJE</div>
                 </div>
-                <div class="script-scene red">
-                    <div class="scene-time">0-3 segundos</div>
-                    <div class="scene-label">HOOK (Dolor)</div>
-                    <div class="scene-text">"¿Cuántas versiones de ti mismo estás interpretando cada día para encajar?"</div>
-                    <div class="scene-direction">[Primer plano de Alberto, mirada directa. Fondo oscuro, iluminación dramática.]</div>
+                <div class="script-scene purple">
+                    <div class="scene-time">0-5 segundos</div>
+                    <div class="scene-label">HOOK — DOLOR</div>
+                    <div class="scene-text">"¿Cuántas máscaras te pones cada día para que nadie vea lo que realmente sientes?"</div>
+                    <div class="scene-direction">[Alberto a cámara, plano medio. Fondo con humo o luz tenue. Tono directo, confrontativo pero empático.]</div>
                 </div>
                 <div class="script-scene">
-                    <div class="scene-time">3-12 segundos</div>
-                    <div class="scene-label">AMPLIFICACIÓN DEL DOLOR</div>
-                    <div class="scene-text">"En el trabajo eres uno. Con tu familia, otro. Con tus amigos, otro más. Y cuando te quedas solo... no sabes quién eres realmente. Esas máscaras que te pusiste para sobrevivir ahora te están asfixiando. Y lo peor: llevas tanto tiempo con ellas que ya no sabes cómo quitártelas."</div>
-                    <div class="scene-direction">[Planos metafóricos: persona mirándose al espejo, diferentes "versiones" de la misma persona.]</div>
-                </div>
-                <div class="script-scene blue">
-                    <div class="scene-time">12-18 segundos</div>
-                    <div class="scene-label">TRANSICIÓN</div>
-                    <div class="scene-text">"Yo lo viví. Con 16 años mi padre entró en coma y estuve 15 años cuidándole solo. Me puse la máscara de 'el fuerte' y casi me destruye."</div>
-                    <div class="scene-direction">[Alberto hablando desde la vulnerabilidad, tono más bajo, íntimo.]</div>
+                    <div class="scene-time">5-20 segundos</div>
+                    <div class="scene-label">AGITACIÓN DEL DOLOR</div>
+                    <div class="scene-text">"La del fuerte. La del que puede con todo. La del que siempre está bien. Yo las llevé todas. Y te digo algo: esas máscaras no te protegen. Te aíslan. Te desconectan de ti mismo. Y cuanto más tiempo las llevas, más difícil es quitártelas. Porque ya no sabes quién eres sin ellas."</div>
+                    <div class="scene-direction">[Cortes rápidos. Imágenes de personas en el retiro con expresiones intensas. Música que sube.]</div>
                 </div>
                 <div class="script-scene green">
-                    <div class="scene-time">18-40 segundos</div>
-                    <div class="scene-label">SOLUCIÓN</div>
-                    <div class="scene-text">"En Sagrado y Salvaje hacemos algo que no se hace en ningún otro sitio. En un fin de semana, a través de dinámicas de alto impacto — caminar sobre cristales, romper flechas, caídas de confianza — creamos un espacio donde esas máscaras se caen. Y lo que queda debajo es la persona más poderosa que has conocido: tú mismo."</div>
-                    <div class="scene-direction">[Imágenes épicas del retiro: cristales, flechas, caída de confianza, humo, luces rojas, música emocional.]</div>
+                    <div class="scene-time">20-40 segundos</div>
+                    <div class="scene-label">SOLUCIÓN + PRUEBA</div>
+                    <div class="scene-text">"En Sagrado y Salvaje creamos un espacio donde esas máscaras se caen. Caminamos sobre cristales, rompemos flechas con el cuello, nos caemos de espaldas confiando en desconocidos. No es un retiro normal. Es un fin de semana donde te enfrentas a tus miedos más profundos. Y lo que queda debajo de la máscara siempre es más bonito de lo que esperabas. 7 ediciones. Cientos de personas transformadas."</div>
+                    <div class="scene-direction">[Montaje de momentos del retiro: cristales, flechas, abrazos, llanto, risas. Música emotiva.]</div>
                 </div>
-                <div class="script-scene">
+                <div class="script-scene gold">
                     <div class="scene-time">40-50 segundos</div>
-                    <div class="scene-label">PRUEBA SOCIAL</div>
-                    <div class="scene-text">"Un asistente nos dijo: 'Esto lo deberían recetar en la seguridad social. Cuando vas hecho mierda, deberían mandarte a Sagrado y Salvaje antes que a ningún sitio.'"</div>
-                    <div class="scene-direction">[Testimonio real o texto en pantalla con la cita.]</div>
-                </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
-                    <div class="scene-time">50-60 segundos</div>
                     <div class="scene-label">CTA</div>
-                    <div class="scene-text">"La próxima edición tiene plazas limitadas. Escribe SAGRADO en comentarios y te cuento todo."</div>
-                    <div class="scene-direction">[Alberto con el grupo del retiro detrás, energía alta. Texto: "Escribe SAGRADO".]</div>
+                    <div class="scene-text">"La próxima edición tiene plazas limitadas. Haz clic en el enlace para reservar tu sitio. Tu yo del futuro te lo agradecerá."</div>
                 </div>
             </div>
 
             <!-- ANUNCIO 3 -->
-            <div class="script-block ad reveal">
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Anuncio 3: "20 Años de Psicólogo y Nada Cambió"</div>
-                    <div class="script-badge ad">META ADS · 30-45s</div>
+                    <div class="script-badge ad">META ADS · 30-45s · CONSULTAS 1 A 1</div>
                 </div>
-                <div class="script-scene red">
+                <div class="script-scene purple">
                     <div class="scene-time">0-3 segundos</div>
-                    <div class="scene-label">HOOK (Dolor)</div>
-                    <div class="scene-text">"¿Llevas años en terapia y sigues sintiéndote exactamente igual?"</div>
+                    <div class="scene-label">HOOK — DOLOR</div>
+                    <div class="scene-text">"¿Llevas años en terapia y sientes que sigues en el mismo punto?"</div>
                 </div>
                 <div class="script-scene">
-                    <div class="scene-time">3-10 segundos</div>
-                    <div class="scene-label">AMPLIFICACIÓN</div>
-                    <div class="scene-text">"12 años, 20 años con un psicólogo. Miles de euros invertidos. Y las mismas heridas siguen ahí. No es culpa tuya. Es que nadie te ha dado herramientas prácticas para gestionarte tú mismo."</div>
+                    <div class="scene-time">3-15 segundos</div>
+                    <div class="scene-label">AGITACIÓN</div>
+                    <div class="scene-text">"No es culpa tuya. Ni del psicólogo. Es que hay heridas que no se curan hablando. Se curan haciendo. Se curan con el cuerpo, con la experiencia, con herramientas que te permiten acceder a donde las palabras no llegan. Hipnosis, PNL, bioneuroemoción, osteopatía emocional."</div>
                 </div>
                 <div class="script-scene green">
-                    <div class="scene-time">10-30 segundos</div>
+                    <div class="scene-time">15-30 segundos</div>
                     <div class="scene-label">SOLUCIÓN</div>
-                    <div class="scene-text">"Yo les digo a mis clientes: conmigo vas a estar 3 meses máximo. Si en 3 meses no has cambiado, no te puedo ayudar. Porque mi objetivo no es que dependas de mí. Es darte las herramientas para que te gestiones solo. Y funciona. Porque cuando la gente tiene un compromiso real y herramientas prácticas, el cambio es brutal."</div>
+                    <div class="scene-text">"Yo combino 20 años de formación en estas disciplinas en sesiones individuales donde vamos directos al origen de tu bloqueo. Sin rodeos. Sin años de espera. Una sesión puede cambiar lo que años de terapia no han conseguido."</div>
                 </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
-                    <div class="scene-time">30-45 segundos</div>
+                <div class="script-scene gold">
+                    <div class="scene-time">30-40 segundos</div>
                     <div class="scene-label">CTA</div>
-                    <div class="scene-text">"Si quieres herramientas reales, no sesiones infinitas, escribe CAMBIO y te cuento cómo trabajo."</div>
+                    <div class="scene-text">"Reserva tu primera sesión en el enlace. Si no notas un cambio real, no me debes nada."</div>
                 </div>
             </div>
         </section>
@@ -799,69 +1013,43 @@
             <div class="section-header reveal">
                 <div class="section-number">05 — Guión de VSL</div>
                 <h2 class="section-title">Video Sales Letter — Escuela de Vida</h2>
-                <p class="section-subtitle">Guión completo de 2-3 minutos con estrategia Pain First para la landing page</p>
+                <p class="section-subtitle">Guión completo de 2-3 minutos para la landing page. Estructura Pain First.</p>
             </div>
 
-            <div class="script-block vsl reveal">
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">VSL: "La Escuela que Tu Vida Necesita"</div>
-                    <div class="script-badge vsl">VSL · 2-3 MIN</div>
+                    <div class="script-badge vsl">VSL · 2-3 MIN · LANDING PAGE</div>
                 </div>
-
-                <div class="script-scene red">
-                    <div class="scene-time">0-5 segundos</div>
-                    <div class="scene-label">HOOK</div>
-                    <div class="scene-text">"Si sientes que llevas años intentando cambiar tu vida pero siempre vuelves al mismo punto, este vídeo es para ti."</div>
-                    <div class="scene-direction">[Alberto a cámara, primer plano, fondo limpio. Tono serio pero cercano.]</div>
+                <div class="script-scene purple">
+                    <div class="scene-time">0-15 segundos</div>
+                    <div class="scene-label">HOOK + DOLOR</div>
+                    <div class="scene-text">"Si estás viendo esto, probablemente llevas tiempo sintiendo que algo no encaja. Que por fuera todo parece estar bien — el trabajo, la familia, la rutina — pero por dentro hay algo que te dice que esto no es todo. Que hay algo más. Y esa sensación no se va. Da igual cuántos libros leas, cuántos podcasts escuches o cuántas veces intentes convencerte de que estás bien. Porque no lo estás. Y en el fondo lo sabes."</div>
+                    <div class="scene-direction">[Alberto a cámara, plano medio. Fondo neutro. Tono íntimo, pausado. Música suave de fondo.]</div>
                 </div>
-
-                <div class="script-scene blue">
-                    <div class="scene-time">5-25 segundos</div>
-                    <div class="scene-label">IDENTIFICACIÓN</div>
-                    <div class="scene-text">"Soy Alberto Güemes. Soy bombero desde hace 21 años y llevo toda mi vida formándome en herramientas de transformación personal. PNL, hipnosis, terapia regresiva, osteopatía, Reiki, registros akásicos. Pero no te cuento esto para impresionarte. Te lo cuento porque todo empezó por necesidad. Con 16 años, mi padre tuvo un accidente y estuvo 15 años en coma. Mi madre tiene una enfermedad degenerativa. Desde los 16 me tuve que gestionar solo. Y todo lo que sé lo aprendí porque no me quedó otra opción."</div>
-                    <div class="scene-direction">[Alberto hablando con autenticidad. Fotos sutiles de su historia si las tiene.]</div>
-                </div>
-
                 <div class="script-scene">
-                    <div class="scene-time">25-50 segundos</div>
-                    <div class="scene-label">PROBLEMA</div>
-                    <div class="scene-text">"Y lo que he descubierto en estos 20 años ayudando a personas es que el 90% de la gente vive con heridas emocionales que no sabe gestionar. Heridas de mamá, de papá, del pasado. Creencias limitantes que les impiden ser libres. Van a un retiro, se sienten increíbles un fin de semana, y a las dos semanas vuelven exactamente al mismo punto. Van al psicólogo 10, 15, 20 años y las mismas heridas siguen ahí. No es que no quieran cambiar. Es que nadie les ha dado las herramientas correctas."</div>
-                    <div class="scene-direction">[Tono empático. Imágenes de personas en situaciones cotidianas de frustración.]</div>
+                    <div class="scene-time">15-45 segundos</div>
+                    <div class="scene-label">AGITACIÓN + IDENTIFICACIÓN</div>
+                    <div class="scene-text">"Yo sé lo que es eso. Con 16 años me quedé solo. Mi padre en coma, mi madre en silla de ruedas, mi hermano se fue. Y yo hice lo que hace la mayoría: ponerme una máscara y tirar para adelante. Me hice bombero. El que siempre ayuda. El que nunca se queja. Pero debajo de esa máscara había un chaval roto que nunca pudo llorar la pérdida de su padre. Y esa herida sin sanar se convirtió en ansiedad, en relaciones tóxicas, en un vacío que no se llenaba con nada."</div>
+                    <div class="scene-direction">[Imágenes intercaladas: Alberto de bombero, fotos antiguas, momentos emotivos. Música sube ligeramente.]</div>
                 </div>
-
-                <div class="script-scene red">
-                    <div class="scene-time">50-75 segundos</div>
-                    <div class="scene-label">AGITACIÓN</div>
-                    <div class="scene-text">"¿Y qué pasa si no haces nada? Pues que dentro de un año estarás exactamente igual. Con las mismas discusiones, los mismos miedos, las mismas excusas. Viendo cómo la vida pasa mientras tú sigues atrapado en patrones que no te pertenecen. Patrones que heredaste de tu familia, de tu entorno, de experiencias que ni siquiera recuerdas. Y lo peor: cada año que pasa, esos patrones se refuerzan más."</div>
-                    <div class="scene-direction">[Alberto más intenso, gesticulando. Música de fondo sutil que sube la tensión.]</div>
-                </div>
-
                 <div class="script-scene green">
-                    <div class="scene-time">75-120 segundos</div>
-                    <div class="scene-label">SOLUCIÓN</div>
-                    <div class="scene-text">"Por eso creé la Escuela de Vida. Son 11 módulos en 5 semanas y media. Cada módulo trabaja un área específica: la culpa, el perdón, la confianza, el poder personal, las creencias limitantes, las heridas emocionales. Pero no es teoría. Cada módulo tiene un cuaderno de ejercicios prácticos para que tú mismo puedas gestionar esas emociones en tu día a día. Mi objetivo no es que dependas de mí. Es que en 5 semanas tengas todas las herramientas para gestionarte solo. Que cuando tu madre te irrite, sepas qué hacer. Que cuando el miedo te paralice, tengas un protocolo. Que cuando una creencia limitante aparezca, la identifiques y la desmontes."</div>
-                    <div class="scene-direction">[Imágenes de los módulos, cuadernos, Alberto enseñando online, participantes tomando notas.]</div>
+                    <div class="scene-time">45-90 segundos</div>
+                    <div class="scene-label">TRANSFORMACIÓN + SOLUCIÓN</div>
+                    <div class="scene-text">"Entonces empecé a buscar. PNL, hipnosis, Gestalt, bioneuroemoción, osteopatía. 20 años formándome con los mejores. Y descubrí algo que cambió mi vida: las heridas emocionales no se curan hablando de ellas. Se curan experimentándolas en un contexto seguro con las herramientas correctas. Por eso creé la Escuela de Vida. Un programa de 9 semanas donde te doy exactamente las herramientas que a mí me salvaron. No es terapia. No es coaching. Es un sistema práctico, paso a paso, para identificar tus heridas, entender tus patrones y transformarlos. Cada semana trabajamos un área diferente: autoconocimiento, gestión emocional, creencias limitantes, relaciones, propósito."</div>
+                    <div class="scene-direction">[Imágenes de la Escuela de Vida, capturas de las sesiones, testimonios cortos intercalados.]</div>
                 </div>
-
-                <div class="script-scene">
-                    <div class="scene-time">120-145 segundos</div>
+                <div class="script-scene" style="border-left-color: var(--warning);">
+                    <div class="scene-time">90-120 segundos</div>
                     <div class="scene-label">PRUEBA SOCIAL</div>
-                    <div class="scene-text">"En 7 ediciones de nuestros retiros y múltiples ediciones de la Escuela de Vida, hemos visto transformaciones que no puedo describir con palabras. Gente que ha estado con los formadores más reconocidos de España nos dice: 'Lo que vosotros entregáis no se compara con nada.' Un asistente nos dijo literalmente: 'Esto lo deberían recetar en la seguridad social.' Y no es porque seamos los mejores. Es porque lo hacemos desde el corazón, con herramientas reales y con un compromiso brutal con cada persona."</div>
-                    <div class="scene-direction">[Testimonios reales en vídeo o texto en pantalla. Imágenes de abrazos, lágrimas de alegría, grupo unido.]</div>
+                    <div class="scene-text">"7 ediciones de retiros presenciales. Cientos de testimonios. Personas que llegaron rotas y salieron con herramientas reales para cambiar su vida. Y ahora todo ese conocimiento está disponible online, desde tu casa, a tu ritmo."</div>
+                    <div class="scene-direction">[Montaje de testimonios reales: 3-4 clips de 5 segundos cada uno de asistentes hablando.]</div>
                 </div>
-
-                <div class="script-scene" style="border-left-color: var(--accent);">
-                    <div class="scene-time">145-170 segundos</div>
-                    <div class="scene-label">OFERTA</div>
-                    <div class="scene-text">"La Escuela de Vida incluye: 11 módulos en directo conmigo, cuaderno de ejercicios por cada módulo, acceso al grupo de apoyo, y la posibilidad de seguir tu camino con nuestros retiros presenciales de Sagrado y Salvaje. Todo por 350€. Menos de lo que cuesta un mes de psicólogo en muchos casos. Pero con herramientas que te van a durar toda la vida."</div>
-                    <div class="scene-direction">[Resumen visual de lo incluido. Precio en pantalla.]</div>
-                </div>
-
-                <div class="script-scene green">
-                    <div class="scene-time">170-180 segundos</div>
-                    <div class="scene-label">CTA</div>
-                    <div class="scene-text">"La próxima edición empieza pronto y las plazas son limitadas porque quiero dar atención real a cada persona. Si sientes que es tu momento, haz clic en el botón de abajo y reserva tu plaza. Y si tienes dudas, escríbeme directamente. Estoy aquí para ayudarte."</div>
-                    <div class="scene-direction">[Alberto sonriendo, cercano. Botón de CTA en pantalla. Música esperanzadora.]</div>
+                <div class="script-scene gold">
+                    <div class="scene-time">120-150 segundos</div>
+                    <div class="scene-label">OFERTA + CTA</div>
+                    <div class="scene-text">"La Escuela de Vida empieza pronto y las plazas son limitadas porque quiero dar atención personalizada a cada alumno. Si esto te resuena, si sientes que es el momento de dejar de sobrevivir y empezar a vivir de verdad, haz clic en el botón de abajo. La primera sesión es gratuita. Sin compromiso. Y si después de esa sesión sientes que no es para ti, no pasa nada. Pero si es para ti... puede ser el punto de inflexión que llevas buscando."</div>
+                    <div class="scene-direction">[Alberto mirando a cámara con convicción. Texto en pantalla: botón "RESERVAR MI PLAZA". Música cierra con nota esperanzadora.]</div>
                 </div>
             </div>
         </section>
@@ -872,12 +1060,12 @@
         <section class="section" id="reels">
             <div class="section-header reveal">
                 <div class="section-number">06 — Guiones de Reels Virales</div>
-                <h2 class="section-title">Reels para Viralización Orgánica</h2>
-                <p class="section-subtitle">Estructuras probadas adaptadas a vuestro sector. Hook + Valor + CTA</p>
+                <h2 class="section-title">6 Reels Listos para Grabar</h2>
+                <p class="section-subtitle">Cada reel está diseñado con la estructura viral probada. Hook + Valor + CTA. Basados en los TikToks de referencia.</p>
             </div>
 
-            <!-- REEL 1 - ALBERTO -->
-            <div class="script-block reel reveal">
+            <!-- REEL 1 -->
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Reel 1: "Lo que 15 Años de Coma me Enseñaron"</div>
                     <div class="script-badge reel">REEL VIRAL · 45-60s · ALBERTO</div>
@@ -886,28 +1074,28 @@
                     <div class="scene-time">0-3 segundos</div>
                     <div class="scene-label">HOOK</div>
                     <div class="scene-text">"Mi padre estuvo 15 años en coma. Y eso me enseñó la lección más importante de mi vida."</div>
-                    <div class="scene-direction">[Alberto a cámara, primer plano. Pausa dramática después del hook. Fondo simple.]</div>
+                    <div class="scene-direction">[Inspirado en @trayectoestoico: primer plano, pausa dramática, fondo simple. Este hook genera curiosidad inmediata.]</div>
                 </div>
                 <div class="script-scene">
                     <div class="scene-time">3-35 segundos</div>
                     <div class="scene-label">DESARROLLO (VALOR)</div>
-                    <div class="scene-text">"Con 16 años me quedé solo. Mi madre en silla de ruedas, mi hermano se fue. Y yo tuve que aprender a gestionarme sin nadie. Libros, cursos, formaciones. Todo lo que sé lo aprendí porque no me quedó otra. Y después de 20 años formándome y ayudando a cientos de personas, esto es lo que he descubierto: el dolor no se va huyendo de él. Se va atravesándolo con las herramientas correctas. No necesitas 20 años de psicólogo. Necesitas herramientas prácticas y el compromiso de usarlas."</div>
-                    <div class="scene-direction">[Alberto hablando con pasión pero serenidad. Cortes dinámicos cada 5-7 segundos.]</div>
+                    <div class="scene-text">"Con 16 años me quedé solo. Mi madre en silla de ruedas, mi hermano se fue. Y yo tuve que aprender a gestionarme sin nadie. Libros, cursos, formaciones. Todo lo que sé lo aprendí porque no me quedó otra. Y después de 20 años formándome y ayudando a cientos de personas, esto es lo que he descubierto: el dolor no se va huyendo de él. Se va atravesándolo con las herramientas correctas."</div>
+                    <div class="scene-direction">[Cortes dinámicos cada 5-7 segundos como @mentalidadseiko. Texto clave en pantalla.]</div>
                 </div>
                 <div class="script-scene green">
                     <div class="scene-time">35-45 segundos</div>
                     <div class="scene-label">RESULTADO</div>
                     <div class="scene-text">"Hoy soy bombero, osteópata, terapeuta, y he ayudado a cientos de personas a liberarse de sus heridas emocionales. Todo empezó con el peor momento de mi vida."</div>
                 </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
+                <div class="script-scene gold">
                     <div class="scene-time">45-50 segundos</div>
                     <div class="scene-label">CTA</div>
                     <div class="scene-text">"Si esto te resuena, sígueme. Cada día comparto herramientas que a mí me salvaron la vida."</div>
                 </div>
             </div>
 
-            <!-- REEL 2 - ALBERTO -->
-            <div class="script-block reel reveal">
+            <!-- REEL 2 -->
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Reel 2: "La Máscara del Fuerte"</div>
                     <div class="script-badge reel">REEL VIRAL · 30-45s · ALBERTO</div>
@@ -916,21 +1104,23 @@
                     <div class="scene-time">0-3 segundos</div>
                     <div class="scene-label">HOOK</div>
                     <div class="scene-text">"La máscara que más daño te hace es la que llevas puesta sin darte cuenta."</div>
+                    <div class="scene-direction">[Inspirado en @thejordisegues: frase directa, impactante, sin preámbulo. 1.1M likes con este formato.]</div>
                 </div>
                 <div class="script-scene">
                     <div class="scene-time">3-25 segundos</div>
                     <div class="scene-label">DESARROLLO</div>
                     <div class="scene-text">"Yo me puse la máscara del fuerte. Bombero, el que siempre ayuda, el que nunca se queja. Y esa máscara casi me destruye. Porque debajo había un chaval de 16 años que nunca pudo llorar la pérdida de su padre. En nuestros retiros llenamos una sala de humo, luces rojas, música emocional. Y creamos un espacio donde esas máscaras se caen. Y lo que queda debajo siempre es más bonito de lo que la persona esperaba."</div>
                 </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
+                <div class="script-scene gold">
                     <div class="scene-time">25-35 segundos</div>
                     <div class="scene-label">CTA</div>
                     <div class="scene-text">"¿Cuál es tu máscara? Cuéntamelo en comentarios. Te leo a todos."</div>
+                    <div class="scene-direction">[CTA de engagement: genera comentarios = más alcance algorítmico.]</div>
                 </div>
             </div>
 
-            <!-- REEL 3 - DIANA -->
-            <div class="script-block reel reveal">
+            <!-- REEL 3 -->
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Reel 3: "Glastonbury me Cambió la Vida"</div>
                     <div class="script-badge reel">REEL VIRAL · 30-45s · DIANA</div>
@@ -939,23 +1129,24 @@
                     <div class="scene-time">0-3 segundos</div>
                     <div class="scene-label">HOOK</div>
                     <div class="scene-text">"Hay un lugar en Inglaterra donde la energía es tan potente que cambia a las personas para siempre."</div>
-                    <div class="scene-direction">[Diana a cámara o imágenes de Glastonbury/Stonehenge. Música mística de fondo.]</div>
+                    <div class="scene-direction">[Inspirado en @institutoarima y @magicamatista: imágenes impactantes del lugar + narración mística.]</div>
                 </div>
                 <div class="script-scene">
                     <div class="scene-time">3-25 segundos</div>
                     <div class="scene-label">DESARROLLO</div>
-                    <div class="scene-text">"Glastonbury. Stonehenge. Formaciones de piedras milenarias. Yo organizo viajes iniciáticos a estos lugares y cada vez que voy, veo cómo las personas se transforman. No es magia. Es conectar con algo más grande que tú en un lugar donde la historia y la energía se sienten en cada paso. Y lo más bonito: muchos vienen de nuestros retiros de Sagrado y Salvaje y este viaje se convierte en el siguiente nivel de su transformación."</div>
-                    <div class="scene-direction">[Imágenes de los viajes: paisajes, grupo caminando, Stonehenge, momentos emotivos.]</div>
+                    <div class="scene-text">"Glastonbury. Stonehenge. Formaciones de piedras milenarias. Yo organizo viajes iniciáticos a estos lugares y cada vez que voy, veo cómo las personas se transforman. No es magia. Es conectar con algo más grande que tú en un lugar donde la historia y la energía se sienten en cada paso."</div>
+                    <div class="scene-direction">[Montaje de paisajes: Glastonbury Tor, Chalice Well, Stonehenge, grupo caminando. Música mística.]</div>
                 </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
+                <div class="script-scene gold">
                     <div class="scene-time">25-35 segundos</div>
                     <div class="scene-label">CTA</div>
                     <div class="scene-text">"¿Te gustaría vivir esta experiencia? Escribe VIAJE en comentarios."</div>
+                    <div class="scene-direction">[Inspirado en @beverlyramosr: CTA con palabra clave = genera leads en DMs.]</div>
                 </div>
             </div>
 
-            <!-- REEL 4 - ALBERTO -->
-            <div class="script-block reel reveal">
+            <!-- REEL 4 -->
+            <div class="script-block reveal">
                 <div class="script-header">
                     <div class="script-title">Reel 4: "Recetado por la Seguridad Social"</div>
                     <div class="script-badge reel">REEL VIRAL · 30-45s · ALBERTO</div>
@@ -964,127 +1155,91 @@
                     <div class="scene-time">0-3 segundos</div>
                     <div class="scene-label">HOOK</div>
                     <div class="scene-text">"Un asistente a nuestro retiro nos dijo: 'Esto lo deberían recetar en la seguridad social.'"</div>
+                    <div class="scene-direction">[Hook de testimonio = prueba social instantánea. Genera curiosidad: "¿qué es tan bueno?"]</div>
                 </div>
                 <div class="script-scene">
                     <div class="scene-time">3-25 segundos</div>
                     <div class="scene-label">DESARROLLO</div>
-                    <div class="scene-text">"Y tiene razón. Porque en un fin de semana, a través de dinámicas de alto impacto, conseguimos lo que muchos no consiguen en años de terapia. No porque seamos mejores que nadie. Sino porque creamos un contexto tan potente — cristales, flechas, caídas de confianza, respiración, música — que el cuerpo y la mente no tienen más remedio que soltar lo que llevan cargando años. 7 ediciones. Cientos de testimonios. Y la gente nos dice que ha pagado irrisoriamente poco por lo que se llevan."</div>
+                    <div class="scene-text">"Y tiene razón. Porque en un fin de semana, a través de dinámicas de alto impacto, conseguimos lo que muchos no consiguen en años de terapia. Cristales, flechas, caídas de confianza, respiración, música. El cuerpo y la mente no tienen más remedio que soltar lo que llevan cargando años. 7 ediciones. Cientos de testimonios."</div>
+                    <div class="scene-direction">[Montaje rápido de momentos del retiro como @domeyepezcastro: cristales, flechas, abrazos.]</div>
                 </div>
-                <div class="script-scene" style="border-left-color: var(--accent);">
+                <div class="script-scene gold">
                     <div class="scene-time">25-35 segundos</div>
                     <div class="scene-label">CTA</div>
-                    <div class="scene-text">"Si quieres saber más sobre Sagrado y Salvaje, sígueme y activa la campanita. Cada día comparto herramientas de transformación real."</div>
+                    <div class="scene-text">"Si quieres saber más sobre Sagrado y Salvaje, sígueme y activa la campanita."</div>
+                </div>
+            </div>
+
+            <!-- REEL 5 -->
+            <div class="script-block reveal">
+                <div class="script-header">
+                    <div class="script-title">Reel 5: "46 Días en la DANA"</div>
+                    <div class="script-badge reel">REEL VIRAL · 45-60s · ALBERTO</div>
+                </div>
+                <div class="script-scene purple">
+                    <div class="scene-time">0-3 segundos</div>
+                    <div class="scene-label">HOOK</div>
+                    <div class="scene-text">"Estuve 46 días como voluntario en la DANA de Valencia. Y lo que vi allí cambió mi forma de ver la vida para siempre."</div>
+                    <div class="scene-direction">[Inspirado en @abc.es DANA viral: imágenes reales + emoción + solidaridad. Tema de actualidad = alcance masivo.]</div>
+                </div>
+                <div class="script-scene">
+                    <div class="scene-time">3-35 segundos</div>
+                    <div class="scene-label">DESARROLLO</div>
+                    <div class="scene-text">"Como bombero, estoy acostumbrado a emergencias. Pero esto fue diferente. Vi a familias que lo perdieron todo. Vi a vecinos sacando barro con las manos. Vi a desconocidos abrazándose llorando. Y vi algo que la tele no enseña: la capacidad del ser humano de levantarse cuando todo se derrumba. Esos 46 días me confirmaron algo que llevo años enseñando: el dolor más grande puede convertirse en tu mayor fortaleza. Si tienes las herramientas correctas."</div>
+                    <div class="scene-direction">[Si tiene fotos/videos de Valencia, usarlos. Si no, hablar a cámara con emoción real.]</div>
+                </div>
+                <div class="script-scene gold">
+                    <div class="scene-time">35-45 segundos</div>
+                    <div class="scene-label">CTA</div>
+                    <div class="scene-text">"¿Tú también has pasado por algo que te cambió? Cuéntamelo en comentarios. Quiero leerte."</div>
+                </div>
+            </div>
+
+            <!-- REEL 6 -->
+            <div class="script-block reveal">
+                <div class="script-header">
+                    <div class="script-title">Reel 6: "Bombero de Día, Terapeuta de Noche"</div>
+                    <div class="script-badge reel">REEL VIRAL · 30-40s · ALBERTO</div>
+                </div>
+                <div class="script-scene purple">
+                    <div class="scene-time">0-3 segundos</div>
+                    <div class="scene-label">HOOK</div>
+                    <div class="scene-text">"Llevo 21 años apagando fuegos por fuera. Pero mi verdadera misión es apagar los fuegos de dentro."</div>
+                    <div class="scene-direction">[Inspirado en @loshombres.si.lloran: vulnerabilidad masculina + identidad de bombero = hook potentísimo.]</div>
+                </div>
+                <div class="script-scene">
+                    <div class="scene-time">3-25 segundos</div>
+                    <div class="scene-label">DESARROLLO</div>
+                    <div class="scene-text">"De día salvo vidas como bombero. De noche ayudo a personas a salvarse a sí mismas. Porque descubrí que las heridas que más duelen no son las que se ven. Son las que llevas dentro sin saber que están ahí. Las que te hacen explotar con tu pareja. Las que te impiden dormir. Las que te dicen que no eres suficiente."</div>
+                </div>
+                <div class="script-scene gold">
+                    <div class="scene-time">25-35 segundos</div>
+                    <div class="scene-label">CTA</div>
+                    <div class="scene-text">"Si quieres aprender a apagar tus fuegos internos, sígueme. Cada día comparto una herramienta."</div>
+                    <div class="scene-direction">[Metáfora del fuego = memorable, compartible, viral. Formato @menteimparable3.]</div>
                 </div>
             </div>
         </section>
 
         <div class="separator"></div>
 
-        <!-- SECCIÓN 7: MARCA PERSONAL -->
-        <section class="section" id="marca">
-            <div class="section-header reveal">
-                <div class="section-number">07 — Marca Personal e Instagram</div>
-                <h2 class="section-title">Estrategia de Perfiles</h2>
-                <p class="section-subtitle">Cómo estructurar vuestras cuentas para maximizar el impacto</p>
-            </div>
-
-            <div class="grid-2 stagger-children">
-                <div class="card reveal" style="--i: 0">
-                    <div class="card-title">🔥 Perfil Alberto Güemes</div>
-                    <p style="color: var(--text-secondary); margin-bottom: 16px;">
-                        <strong style="color: var(--accent);">Perfil principal.</strong> La Escuela de Vida recae sobre Alberto. Es el perfil donde hay que volcar toda la energía inicial.
-                    </p>
-                    <p style="color: var(--text-secondary); margin-bottom: 12px;"><strong style="color: var(--text-primary);">Bio sugerida:</strong></p>
-                    <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 10px; font-family: 'Space Grotesk', monospace; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8;">
-                        🔥 Bombero · Terapeuta · Autor<br>
-                        🧠 Herramientas de transformación real<br>
-                        📚 Escuela de Vida — 11 módulos que cambian todo<br>
-                        ⛰️ Creador de Sagrado y Salvaje<br>
-                        👇 Tu cambio empieza aquí
-                    </div>
-                    <div style="margin-top: 16px;">
-                        <p style="color: var(--text-muted); font-size: 0.85rem;"><strong>Contenido:</strong> 1 reel diario sobre desarrollo personal, heridas emocionales, herramientas prácticas, historia personal, testimonios.</p>
-                    </div>
-                </div>
-
-                <div class="card reveal" style="--i: 1">
-                    <div class="card-title">✨ Perfil Vaidiana Quintas (Diana)</div>
-                    <p style="color: var(--text-secondary); margin-bottom: 16px;">
-                        <strong style="color: var(--accent);">Perfil complementario.</strong> Los viajes iniciáticos y la parte más espiritual. El crecimiento personal de Diana al crear contenido será transformador también para ella.
-                    </p>
-                    <p style="color: var(--text-secondary); margin-bottom: 12px;"><strong style="color: var(--text-primary);">Bio sugerida:</strong></p>
-                    <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 10px; font-family: 'Space Grotesk', monospace; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.8;">
-                        🌍 Viajes iniciáticos a lugares sagrados<br>
-                        🏴󠁧󠁢󠁥󠁮󠁧󠁿 Glastonbury · Stonehenge · Inglaterra<br>
-                        🧘‍♀️ Meditación · Baños de sonido · Yoga<br>
-                        ⚡ Co-creadora de Sagrado y Salvaje<br>
-                        👇 Tu próximo viaje interior
-                    </div>
-                    <div style="margin-top: 16px;">
-                        <p style="color: var(--text-muted); font-size: 0.85rem;"><strong>Contenido:</strong> 1 reel diario sobre espiritualidad, viajes, lugares sagrados, meditación, experiencias de los viajes, crecimiento personal femenino.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card reveal" style="margin-top: 24px;">
-                <div class="card-title">📊 Pilares de Contenido</div>
-                <div class="grid-3" style="margin-top: 16px;">
-                    <div class="pillar-card">
-                        <div class="pillar-icon">💔</div>
-                        <div class="pillar-title">Heridas y Sanación</div>
-                        <div class="pillar-desc">Hablar de heridas emocionales, creencias limitantes, perdón, culpa. Contenido que conecta profundamente porque todos lo hemos vivido.</div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">🛠️</div>
-                        <div class="pillar-title">Herramientas Prácticas</div>
-                        <div class="pillar-desc">Ejercicios concretos, técnicas de respiración, protocolos de gestión emocional. El contenido más valioso: que la gente pueda aplicarlo HOY.</div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">📖</div>
-                        <div class="pillar-title">Historia Personal</div>
-                        <div class="pillar-desc">Vuestra historia es vuestra mayor arma. El coma del padre, la enfermedad de la madre, Valencia, los retiros. Vulnerabilidad = conexión.</div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">🎬</div>
-                        <div class="pillar-title">Behind the Scenes</div>
-                        <div class="pillar-desc">Momentos de los retiros, preparación, viajes a Inglaterra, el día a día como bombero + terapeuta. Humanizar la marca.</div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">💬</div>
-                        <div class="pillar-title">Testimonios</div>
-                        <div class="pillar-desc">Tenéis cientos de testimonios grabados. Usadlos. Un testimonio real vale más que mil palabras vuestras. Subid uno por semana mínimo.</div>
-                    </div>
-                    <div class="pillar-card">
-                        <div class="pillar-icon">🌍</div>
-                        <div class="pillar-title">Lugares Sagrados</div>
-                        <div class="pillar-desc">Glastonbury, Stonehenge, Colombia. Contenido visual de los viajes que genera curiosidad y deseo de vivir esas experiencias.</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="separator"></div>
-
-        <!-- SECCIÓN 8: SIGUIENTE PASO -->
+        <!-- SECCIÓN 7: SIGUIENTE PASO -->
         <section class="section cta-section" id="siguiente">
             <div class="section-header reveal">
-                <div class="section-number">08 — Siguiente Paso</div>
+                <div class="section-number">07 — Siguiente Paso</div>
                 <h2 class="section-title">Tu Camino Empieza Ahora</h2>
                 <p class="section-subtitle">El siguiente paso para poner todo esto en marcha</p>
             </div>
-
             <div class="highlight-box reveal" style="max-width: 700px; margin: 0 auto 40px;">
                 <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.8; text-align: center;">
-                    Este documento contiene toda la estrategia de viralización, los guiones de anuncios, el VSL y los reels virales. El siguiente paso es <strong style="color: var(--accent);">agendar una sesión con el equipo de Focus Consultor</strong> para construir el embudo de ventas completo y poner en marcha toda la maquinaria digital.
+                    Este documento contiene toda la estrategia de viralización, los TikToks de referencia, los guiones de anuncios Pain First, el VSL y los 6 reels virales listos para grabar. El siguiente paso es <strong style="color: var(--accent);">agendar una sesión con el equipo de Focus Consultor</strong> para construir el embudo de ventas completo y poner en marcha toda la maquinaria digital.
                 </p>
             </div>
-
             <div class="reveal">
                 <a href="https://focusconsultor.com" class="cta-button" target="_blank">
                     Agendar Sesión en Focus Consultor
                 </a>
             </div>
-
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 24px;" class="reveal">
                 Para cualquier duda sobre este documento, respondemos en 24-48 horas.
             </p>
@@ -1106,12 +1261,10 @@
             const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
             document.getElementById('progressBar').style.width = pct + '%';
         });
-
         // Nav scroll effect
         window.addEventListener('scroll', () => {
             document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
         });
-
         // Particles
         const pc = document.getElementById('particles');
         for (let i = 0; i < 30; i++) {
@@ -1123,13 +1276,11 @@
             p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
             pc.appendChild(p);
         }
-
         // Scroll reveal
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    // Stagger children
                     const children = entry.target.parentElement?.classList.contains('stagger-children')
                         ? [] : entry.target.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
                     children.forEach((child, i) => {
@@ -1139,9 +1290,7 @@
                 }
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
         document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => observer.observe(el));
-
         // Smooth scroll for nav links
         document.querySelectorAll('.nav-links a').forEach(a => {
             a.addEventListener('click', e => {
@@ -1149,6 +1298,19 @@
                 document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
             });
         });
+        // Stagger children animation
+        const staggerObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const children = entry.target.children;
+                    Array.from(children).forEach((child, i) => {
+                        child.style.transitionDelay = (i * 0.12) + 's';
+                    });
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.stagger-children').forEach(el => staggerObserver.observe(el));
     </script>
 </body>
 </html>
