@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Implementación — Miquel | Pérgolas Premium | FOCUS Consulting Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0b1120;
+            --secondary: #131b2e;
+            --accent: #b8a04c;
+            --accent-light: #d4c06a;
+            --text: #e8e6e3;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(19, 27, 46, 0.7);
+            --border: rgba(184, 160, 76, 0.2);
+            --glow: rgba(184, 160, 76, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            z-index: 10000;
+            transition: width 0.1s linear;
+        }
+
+        .aurora {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .aurora::before, .aurora::after {
+            content: '';
+            position: absolute;
+            width: 150%; height: 150%;
+            border-radius: 50%;
+            animation: aurora 20s ease-in-out infinite;
+        }
+        .aurora::before {
+            background: radial-gradient(ellipse, rgba(184,160,76,0.03) 0%, transparent 60%);
+            top: -50%; left: -25%;
+        }
+        .aurora::after {
+            background: radial-gradient(ellipse, rgba(100,140,200,0.02) 0%, transparent 60%);
+            bottom: -50%; right: -25%;
+            animation-delay: -10s;
+        }
+        @keyframes aurora {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(3deg); }
+            66% { transform: translate(-20px, 20px) rotate(-2deg); }
+        }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        .particle { position: absolute; width: 2px; height: 2px; background: var(--accent); border-radius: 50%; opacity: 0; animation: float 15s infinite; }
+        @keyframes float {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1); }
+        }
+
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 1rem 2rem;
+            backdrop-filter: blur(20px);
+            background: rgba(11, 17, 32, 0.8);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--text); letter-spacing: 2px; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 6rem 2rem 4rem; position: relative;
+        }
+        .hero-logo { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; letter-spacing: 6px; margin-bottom: 0.5rem; color: var(--text); }
+        .hero-logo span { color: var(--accent); }
+        .hero-subtitle-brand { font-size: 0.9rem; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 3rem; border-top: 1px solid var(--accent); padding-top: 0.5rem; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; background: linear-gradient(135deg, var(--text), var(--accent-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; }
+        .hero-meta { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+        .hero-meta-item { text-align: center; }
+        .hero-meta-item .value { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+        .hero-meta-item .label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        .recording-banner {
+            background: linear-gradient(135deg, rgba(184,160,76,0.1), rgba(184,160,76,0.05));
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 1.5rem 2rem; margin: 2rem auto; max-width: 600px; text-align: center;
+        }
+        .recording-banner a { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent); text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s; }
+        .recording-banner a:hover { color: var(--accent-light); transform: translateY(-2px); }
+        .recording-banner p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+        .section { max-width: 1000px; margin: 0 auto; padding: 5rem 2rem; }
+        .section-header { margin-bottom: 3rem; }
+        .section-number { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; color: var(--accent); opacity: 0.3; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; margin-top: -0.5rem; }
+        .section-subtitle { color: var(--text-muted); margin-top: 0.5rem; }
+
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s; }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 40px var(--glow); }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .kpi-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.3s; }
+        .kpi-card:hover { border-color: var(--accent); box-shadow: 0 5px 20px var(--glow); }
+        .kpi-value { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .kpi-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
+
+        .funnel { max-width: 700px; margin: 2rem auto; }
+        .funnel-step { display: flex; align-items: center; gap: 1.5rem; padding: 1.5rem; margin-bottom: 1rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; transition: all 0.3s; }
+        .funnel-step:hover { border-color: var(--accent); transform: translateX(10px); }
+        .funnel-step-number { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--accent); min-width: 50px; text-align: center; }
+        .funnel-step-content h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .funnel-step-content p { font-size: 0.85rem; color: var(--text-muted); }
+        .funnel-arrow { text-align: center; color: var(--accent); font-size: 1.5rem; margin: 0.5rem 0; }
+
+        .script-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+        .script-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+        .script-type { background: rgba(184,160,76,0.15); color: var(--accent); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .script-duration { color: var(--text-muted); font-size: 0.85rem; }
+        .script-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; }
+        .script-line { padding: 0.8rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; gap: 1rem; }
+        .script-line:last-child { border-bottom: none; }
+        .script-time { color: var(--accent); font-weight: 600; font-size: 0.8rem; min-width: 60px; }
+        .script-text { color: var(--text-muted); font-size: 0.9rem; }
+        .script-text strong { color: var(--text); }
+
+        .tiktok-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .tiktok-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: all 0.3s; }
+        .tiktok-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px var(--glow); }
+        .tiktok-handle { color: var(--accent); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .tiktok-stats { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .tiktok-stats span { color: var(--accent); font-weight: 600; }
+        .tiktok-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+        .tiktok-why { font-size: 0.8rem; color: var(--text); background: rgba(184,160,76,0.08); padding: 0.5rem 0.8rem; border-radius: 8px; border-left: 3px solid var(--accent); }
+        .tiktok-link { display: inline-block; margin-top: 0.8rem; color: var(--accent); text-decoration: none; font-size: 0.8rem; font-weight: 600; }
+        .tiktok-link:hover { text-decoration: underline; }
+
+        .reel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .reel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+        .reel-number { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--accent); opacity: 0.5; }
+        .reel-title { font-weight: 600; margin: 0.5rem 0; }
+        .reel-hook { background: rgba(184,160,76,0.1); padding: 0.8rem; border-radius: 8px; margin: 0.8rem 0; font-style: italic; color: var(--accent-light); font-size: 0.9rem; }
+        .reel-steps { list-style: none; padding: 0; }
+        .reel-steps li { padding: 0.4rem 0; font-size: 0.85rem; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .reel-steps li::before { content: '→ '; color: var(--accent); }
+
+        .info-box { background: rgba(184,160,76,0.08); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+        .info-box h4 { color: var(--accent); margin-bottom: 0.5rem; }
+        .info-box p, .info-box li { font-size: 0.9rem; color: var(--text-muted); }
+        .info-box ul { list-style: none; padding: 0; }
+        .info-box ul li { padding: 0.3rem 0; }
+        .info-box ul li::before { content: '→ '; color: var(--accent); }
+
+        .erp-feature { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .erp-feature:last-child { border-bottom: none; }
+        .erp-icon { font-size: 1.5rem; min-width: 40px; text-align: center; }
+        .erp-content h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .erp-content p { font-size: 0.85rem; color: var(--text-muted); }
+
+        .cta-section { text-align: center; padding: 5rem 2rem; }
+        .cta-button { display: inline-block; background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: var(--primary); padding: 1.2rem 3rem; border-radius: 50px; font-weight: 700; font-size: 1.1rem; text-decoration: none; transition: all 0.3s; box-shadow: 0 5px 30px rgba(184,160,76,0.3); }
+        .cta-button:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 40px rgba(184,160,76,0.5); }
+
+        .footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); }
+        .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 4px; }
+        .footer-logo span { color: var(--accent); }
+        .footer p { color: var(--text-muted); font-size: 0.8rem; margin-top: 0.5rem; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .highlight { color: var(--accent); font-weight: 600; }
+
+        .formula-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .formula-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; }
+        .formula-item h4 { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .formula-item p { font-size: 0.8rem; color: var(--text-muted); }
+
+        .checklist { list-style: none; padding: 0; }
+        .checklist li { display: flex; align-items: flex-start; gap: 0.8rem; padding: 0.8rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
+        .checklist li::before { content: '☐'; color: var(--accent); font-size: 1.1rem; min-width: 20px; }
+
+        .quote-box { background: rgba(184,160,76,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; margin: 2rem 0; }
+        .quote-box blockquote { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-style: italic; color: var(--accent-light); margin-bottom: 0.5rem; }
+        .quote-box cite { font-size: 0.85rem; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-meta { gap: 1rem; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .tiktok-grid, .reel-grid { grid-template-columns: 1fr; }
+            .funnel-step { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="aurora"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <div class="nav-logo">FOCUS<span>.</span></div>
+            <ul class="nav-links">
+                <li><a href="#contexto">Contexto</a></li>
+                <li><a href="#numeros">Números</a></li>
+                <li><a href="#embudo">Embudo</a></li>
+                <li><a href="#erp">ERP</a></li>
+                <li><a href="#virales">Virales</a></li>
+                <li><a href="#anuncios">Anuncios</a></li>
+                <li><a href="#vsl">VSL</a></li>
+                <li><a href="#reels">Reels</a></li>
+                <li><a href="#delegacion">Delegación</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <div class="hero-logo">FOCUS<span>.</span></div>
+        <div class="hero-subtitle-brand">CONSULTING GROUP</div>
+        <h1>Plan de Implementación</h1>
+        <p>Miquel — Pérgolas Premium Navarra</p>
+        <div class="hero-meta">
+            <div class="hero-meta-item">
+                <div class="value">1,37M€</div>
+                <div class="label">Facturación</div>
+            </div>
+            <div class="hero-meta-item">
+                <div class="value">370K€</div>
+                <div class="label">Beneficio</div>
+            </div>
+            <div class="hero-meta-item">
+                <div class="value">12-120K€</div>
+                <div class="label">Ticket</div>
+            </div>
+            <div class="hero-meta-item">
+                <div class="value">106 min</div>
+                <div class="label">Sesión</div>
+            </div>
+        </div>
+
+        <div class="recording-banner">
+            <a href="https://fathom.video/share/v5gWNoGwkBZPpBKmzDTPyoZzzfxRXjvb" target="_blank">
+                ▶ Ver Grabación Completa de la Sesión
+            </a>
+            <p>Haz clic para volver a ver la sesión cuando lo necesites</p>
+        </div>
+    </header>
+
+    <!-- 01 Contexto -->
+    <section class="section reveal" id="contexto">
+        <div class="section-header">
+            <div class="section-number">01</div>
+            <h2 class="section-title">Contexto de la Empresa</h2>
+            <p class="section-subtitle">Situación actual y diferenciación</p>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--accent); margin-bottom: 1rem;">Pérgolas Premium Navarra</h3>
+            <p>Empresa de <span class="highlight">pérgolas bioclimáticas, cerramientos de cristal y toldos</span> ubicada en Pamplona/Navarra, con expansión al País Vasco e Islas (Ibiza, Mallorca). Pioneros en pérgolas para hostelería en la región.</p>
+            <br>
+            <p><strong>Producto Estrella:</strong> Pérgolas bioclimáticas para hostelería — lamas orientables, acristaladas, con iluminación LED integrada. Transforman terrazas de restaurantes y bares en espacios premium que generan ingresos todo el año.</p>
+            <br>
+            <p><strong>Diferenciador:</strong> Calidad premium, no compiten en precio. Cada instalación es a medida con acabados de lujo. Los establecimientos que instalan sus pérgolas incrementan significativamente la facturación de terraza.</p>
+        </div>
+
+        <div class="quote-box">
+            <blockquote>"No hacemos cerramientos, creamos espacios donde la gente vive momentos increíbles"</blockquote>
+            <cite>— Propuesta de valor emocional</cite>
+        </div>
+
+        <div class="info-box">
+            <h4>Clientes Objetivo</h4>
+            <ul>
+                <li><strong>Hostelería (80K-120K€):</strong> Restaurantes, bares, hoteles que quieren rentabilizar su terraza todo el año</li>
+                <li><strong>Residencial (12K€):</strong> Particulares con terraza/jardín que buscan calidad premium</li>
+                <li><strong>Arquitectos:</strong> Prescriptores que incluyen pérgolas en sus proyectos</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 02 Números Clave -->
+    <section class="section reveal" id="numeros">
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <h2 class="section-title">Números Clave</h2>
+            <p class="section-subtitle">Métricas financieras y oportunidades</p>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-value">1,37M€</div>
+                <div class="kpi-label">Facturación Anual</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">370K€</div>
+                <div class="kpi-label">Beneficio (27%)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">12K€</div>
+                <div class="kpi-label">Ticket Residencial</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">80-120K€</div>
+                <div class="kpi-label">Ticket Hostelería</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">24 meses</div>
+                <div class="kpi-label">Financiación</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">14 likes</div>
+                <div class="kpi-label">Media Instagram (actual)</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Oportunidad Identificada</h4>
+            <p>Con una facturación de 1,37M€ y solo 14 likes por publicación en Instagram, existe un <span class="highlight">gap enorme entre la calidad del producto y la visibilidad digital</span>. Un solo proyecto de hostelería (80-120K€) cerrado a través del embudo digital justifica toda la inversión en marketing del año.</p>
+        </div>
+    </section>
+
+    <!-- 03 Embudo de Ventas -->
+    <section class="section reveal" id="embudo">
+        <div class="section-header">
+            <div class="section-number">03</div>
+            <h2 class="section-title">Embudo de Ventas Completo</h2>
+            <p class="section-subtitle">Del anuncio al cierre — paso a paso</p>
+        </div>
+
+        <div class="funnel">
+            <div class="funnel-step">
+                <div class="funnel-step-number">1</div>
+                <div class="funnel-step-content">
+                    <h4>Anuncio Meta Ads (15-20s)</h4>
+                    <p>Vídeo corto con estructura Pain First. Antes/después de terraza. Hook que para el scroll. Segmentación: hostelería + residencial + arquitectos.</p>
+                </div>
+            </div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">
+                <div class="funnel-step-number">2</div>
+                <div class="funnel-step-content">
+                    <h4>Landing Page con VSL (2.5 min)</h4>
+                    <p>Vídeo de Miquel grabado en terrazas reales de hostelería. Muestra trabajos terminados. Genera confianza y autoridad. Estructura Pain First.</p>
+                </div>
+            </div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">
+                <div class="funnel-step-number">3</div>
+                <div class="funnel-step-content">
+                    <h4>Formulario Inteligente (7 preguntas)</h4>
+                    <p>Lógica condicional: detecta si es hostelería, residencial o arquitecto. Cualifica automáticamente el lead según ticket potencial.</p>
+                </div>
+            </div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">
+                <div class="funnel-step-number">4</div>
+                <div class="funnel-step-content">
+                    <h4>WhatsApp + Bot IA (Focus CRM)</h4>
+                    <p>El lead llega a WhatsApp en menos de 1 minuto. Bot de IA cualifica automáticamente, responde dudas básicas y agenda visita comercial.</p>
+                </div>
+            </div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">
+                <div class="funnel-step-number">5</div>
+                <div class="funnel-step-content">
+                    <h4>Llamada Comercial</h4>
+                    <p>Comercial cierra tickets de 12-25K€. Miquel cierra personalmente los de hostelería (80-120K€). Visita presencial al establecimiento.</p>
+                </div>
+            </div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">
+                <div class="funnel-step-number">6</div>
+                <div class="funnel-step-content">
+                    <h4>Presupuesto + Cierre</h4>
+                    <p>Presupuesto generado desde el ERP a medida. Incluye renders, fotos de referencia y financiación a 24 meses. Cierre en 1-2 visitas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Regla de Oro</h4>
+            <p>Lead que contestas en <span class="highlight">menos de 1 minuto = máxima conversión</span>. El bot de IA de Focus CRM garantiza respuesta instantánea 24/7. Los leads que esperan más de 5 minutos pierden un 80% de probabilidad de cierre.</p>
+        </div>
+    </section>
+
+    <!-- 04 ERP a Medida -->
+    <section class="section reveal" id="erp">
+        <div class="section-header">
+            <div class="section-number">04</div>
+            <h2 class="section-title">ERP a Medida con Manus</h2>
+            <p class="section-subtitle">Tu sistema de presupuestos automatizado</p>
+        </div>
+
+        <div class="card">
+            <p>En lugar de pagar <span class="highlight">15.000-20.000€</span> por un ERP externo, se construirá uno a medida usando Manus + ChatGPT en 3-4 días. Proceso:</p>
+            <br>
+            <div class="erp-feature">
+                <div class="erp-icon">📋</div>
+                <div class="erp-content">
+                    <h4>Paso 1: Briefing en ChatGPT</h4>
+                    <p>Pulir el resumen de requisitos: productos, referencias, metros, precios, fotos, dibujos técnicos.</p>
+                </div>
+            </div>
+            <div class="erp-feature">
+                <div class="erp-icon">🔧</div>
+                <div class="erp-content">
+                    <h4>Paso 2: Construcción en Manus</h4>
+                    <p>Pasar el briefing a Manus para que construya el ERP funcional: tabla de productos, generador de presupuestos automáticos, galería de fotos.</p>
+                </div>
+            </div>
+            <div class="erp-feature">
+                <div class="erp-icon">📊</div>
+                <div class="erp-content">
+                    <h4>Paso 3: Iteración</h4>
+                    <p>Probar, ajustar y añadir funcionalidades. Presupuestos con renders, cálculos automáticos de metros y precios.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Funcionalidades del ERP</h4>
+            <ul>
+                <li>Tabla de productos con referencias, metros y precios</li>
+                <li>Generador automático de presupuestos</li>
+                <li>Galería de fotos por proyecto</li>
+                <li>Dibujos técnicos y renders</li>
+                <li>Historial de clientes y seguimiento</li>
+                <li>Cálculos automáticos por metro cuadrado</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 05 Viralización y TikToks de Referencia -->
+    <section class="section reveal" id="virales">
+        <div class="section-header">
+            <div class="section-number">05</div>
+            <h2 class="section-title">Estrategia de Viralización</h2>
+            <p class="section-subtitle">TikToks de referencia y estructura viral para pérgolas</p>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--accent); margin-bottom: 1rem;">La Oportunidad Viral</h3>
+            <p>Los negocios visuales con <span class="highlight">antes/después</span> son los que más viralizan en TikTok e Instagram. Una persona documentó su proceso de pérgola en casa y consiguió <span class="highlight">6.9 millones de visualizaciones</span> sin ningún CTA ni estrategia. Otro vídeo de "paso a paso pérgola" alcanzó <span class="highlight">1 millón de views con más de 1.000 comentarios</span> pidiendo presupuesto.</p>
+            <br>
+            <p>Tu producto es inherentemente viral: la transformación visual de una terraza es contenido que la gente comparte. Solo necesitas la estructura correcta y un CTA al final.</p>
+        </div>
+
+        <h3 style="margin: 2rem 0 1rem; color: var(--accent);">TikToks Virales de Referencia</h3>
+
+        <div class="tiktok-grid">
+            <div class="tiktok-card">
+                <div class="tiktok-handle">@coveryourpergola</div>
+                <div class="tiktok-stats"><span>57M views</span> en Instagram</div>
+                <div class="tiktok-desc">Pérgola flotante SkyPoly — el vídeo de pérgola más viral de la historia. Antes/después espectacular con diseño minimalista.</div>
+                <div class="tiktok-why">Estructura a copiar: Plano del "antes" feo → Transición rápida → Resultado WOW. Sin hablar, solo música.</div>
+                <a href="https://www.tiktok.com/@coveryourpergola/video/7630307488570592542" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card">
+                <div class="tiktok-handle">@twobrothersmadrid</div>
+                <div class="tiktok-stats">Referente directo — <span>Pérgolas bioclimáticas España</span></div>
+                <div class="tiktok-desc">Mismo producto exacto que tú. Contenido de antes/después de terrazas con pérgolas bioclimáticas premium en Madrid.</div>
+                <div class="tiktok-why">Tu competidor directo en contenido. Estudia su formato: voz en off + proceso de instalación + resultado final.</div>
+                <a href="https://www.tiktok.com/@twobrothersmadrid/video/7540245721354833175" target="_blank" class="tiktok-link">Ver Antes/Después →</a>
+            </div>
+
+            <div class="tiktok-card">
+                <div class="tiktok-handle">@brentandmir</div>
+                <div class="tiktok-stats"><span>6.527 likes</span> — Patio makeover</div>
+                <div class="tiktok-desc">Transformación de patio con set simple. Demuestra que el formato "antes vs después" funciona incluso con presupuestos bajos.</div>
+                <div class="tiktok-why">Hook: "Patio makeover complete" + timelapse rápido + reveal final. Formato replicable semanalmente.</div>
+                <a href="https://www.tiktok.com/@brentandmir/video/7639523756670536974" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card">
+                <div class="tiktok-handle">@the_professional_idiots</div>
+                <div class="tiktok-stats"><span>Viral 2024</span> — Building the Most Popular Pergola</div>
+                <div class="tiktok-desc">Equipo construyendo pérgola paso a paso. Formato documental que engancha porque ves el proceso completo.</div>
+                <div class="tiktok-why">Formato "día a día de obra" que genera engagement masivo. La gente quiere ver el proceso, no solo el resultado.</div>
+                <a href="https://www.tiktok.com/@the_professional_idiots/video/7390347970849344800" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card">
+                <div class="tiktok-handle">@ramsesahernandez</div>
+                <div class="tiktok-stats"><span>Viral</span> — Backyard transformation completa</div>
+                <div class="tiktok-desc">Transformación total: pérgola + cocina exterior + paisajismo. El "proyecto completo" que todo hostelero sueña.</div>
+                <div class="tiktok-why">Muestra el resultado final como un "sueño hecho realidad". Ideal para inspirar a hosteleros con terrazas grandes.</div>
+                <a href="https://www.tiktok.com/@ramsesahernandez/video/7628735759998143774" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+
+            <div class="tiktok-card">
+                <div class="tiktok-handle">@andreaseviilla_</div>
+                <div class="tiktok-stats"><span>Reciente</span> — Mi terraza antes VS ahora</div>
+                <div class="tiktok-desc">"Mi terraza antes VS mi terraza ahora" — contenido personal que viraliza por la identificación del espectador.</div>
+                <div class="tiktok-why">Formato POV personal: "Esto era mi terraza hace 8 meses..." Genera comentarios tipo "¿Cuánto costó?" = leads gratis.</div>
+                <a href="https://www.tiktok.com/@andreaseviilla_/video/7634135626811526422" target="_blank" class="tiktok-link">Ver TikTok →</a>
+            </div>
+        </div>
+
+        <h3 style="margin: 2rem 0 1rem; color: var(--accent);">La Fórmula Viral para Pérgolas</h3>
+
+        <div class="formula-grid">
+            <div class="formula-item">
+                <h4>HOOK (0-3s)</h4>
+                <p>"Mirad qué zona más desaprovechada..." o antes/después visual impactante</p>
+            </div>
+            <div class="formula-item">
+                <h4>PROCESO (3-25s)</h4>
+                <p>Paso a paso de la instalación. Timelapse. Equipo trabajando. Detalles técnicos.</p>
+            </div>
+            <div class="formula-item">
+                <h4>REVEAL (25-40s)</h4>
+                <p>El "WOW" final. Terraza terminada de noche con luces LED. El momento mágico.</p>
+            </div>
+            <div class="formula-item">
+                <h4>CTA (40-50s)</h4>
+                <p>"Si quieres transformar tu terraza, rellena el formulario en bio" o "Escribe PÉRGOLA"</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Reglas de Viralización</h4>
+            <ul>
+                <li>Mínimo 2 reels/semana (1 viral + 1 de autoridad)</li>
+                <li>Publicar en TikTok + Instagram Reels simultáneamente</li>
+                <li>Combinar reels virales (hook fuerte) con reels de autoridad (más relajados, mostrando expertise)</li>
+                <li>NO siempre intentar ser viral — el contenido de autoridad genera confianza</li>
+                <li>Grabar SIEMPRE los antes/después de cada proyecto</li>
+                <li>CTA en todos los vídeos: "Rellena el formulario en bio"</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 06 Guiones de Anuncios -->
+    <section class="section reveal" id="anuncios">
+        <div class="section-header">
+            <div class="section-number">06</div>
+            <h2 class="section-title">Guiones de Anuncios — Meta Ads</h2>
+            <p class="section-subtitle">Estrategia Pain First — 3 anuncios listos para grabar</p>
+        </div>
+
+        <div class="script-card">
+            <div class="script-header">
+                <span class="script-type">Anuncio 1 — Hostelería</span>
+                <span class="script-duration">15-20 segundos</span>
+            </div>
+            <div class="script-title">"Tu Terraza Está Perdiendo Dinero"</div>
+            <div class="script-line">
+                <span class="script-time">0-3s</span>
+                <span class="script-text"><strong>HOOK:</strong> "Tu terraza está cerrada 6 meses al año. ¿Sabes cuánto dinero estás perdiendo?"</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">3-8s</span>
+                <span class="script-text"><strong>DOLOR:</strong> [Plano de terraza vacía en invierno] "Mientras tu competencia factura todo el año con su terraza cubierta, tú pierdes miles de euros cada mes que llueve o hace frío."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">8-12s</span>
+                <span class="script-text"><strong>SOLUCIÓN:</strong> [Corte a pérgola bioclimática de noche, con luces LED, gente cenando] "Una pérgola bioclimática transforma tu terraza en un espacio rentable los 365 días del año."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">12-18s</span>
+                <span class="script-text"><strong>PRUEBA:</strong> "Llevamos más de [X] instalaciones en hostelería en Navarra. Financiación a 24 meses disponible."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">18-20s</span>
+                <span class="script-text"><strong>CTA:</strong> "Solicita tu presupuesto sin compromiso. Link en bio."</span>
+            </div>
+        </div>
+
+        <div class="script-card">
+            <div class="script-header">
+                <span class="script-type">Anuncio 2 — Residencial</span>
+                <span class="script-duration">15-20 segundos</span>
+            </div>
+            <div class="script-title">"Tu Jardín Podría Ser Esto"</div>
+            <div class="script-line">
+                <span class="script-time">0-3s</span>
+                <span class="script-text"><strong>HOOK:</strong> [Antes: terraza sin sombra, muebles deteriorados] "¿Tu terraza se parece a esto?"</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">3-8s</span>
+                <span class="script-text"><strong>DOLOR:</strong> "Sol que quema en verano. Lluvia que arruina tus muebles. Un espacio que no usas ni la mitad del año."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">8-14s</span>
+                <span class="script-text"><strong>SOLUCIÓN:</strong> [Transición dramática al después] "Mira cómo queda con una pérgola bioclimática. Lamas que se abren y cierran. Protección total. Diseño premium."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">14-18s</span>
+                <span class="script-text"><strong>PRUEBA:</strong> "Desde 12.000€ con financiación a 24 meses. Instalación en [X] días."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">18-20s</span>
+                <span class="script-text"><strong>CTA:</strong> "Rellena el formulario y te hacemos un presupuesto a medida."</span>
+            </div>
+        </div>
+
+        <div class="script-card">
+            <div class="script-header">
+                <span class="script-type">Anuncio 3 — Arquitectos</span>
+                <span class="script-duration">15-20 segundos</span>
+            </div>
+            <div class="script-title">"Tus Proyectos Merecen Este Acabado"</div>
+            <div class="script-line">
+                <span class="script-time">0-3s</span>
+                <span class="script-text"><strong>HOOK:</strong> [Plano cenital de pérgola bioclimática integrada en arquitectura moderna] "¿Buscas el cerramiento perfecto para tus proyectos?"</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">3-8s</span>
+                <span class="script-text"><strong>DOLOR:</strong> "Proveedores que no cumplen plazos. Acabados que no están a la altura. Clientes que esperan perfección."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">8-14s</span>
+                <span class="script-text"><strong>SOLUCIÓN:</strong> [Detalles de acabados premium, lamas, cristal, LED] "Pérgolas bioclimáticas a medida. Precisión milimétrica. Integración perfecta con cualquier diseño arquitectónico."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">14-18s</span>
+                <span class="script-text"><strong>PRUEBA:</strong> "Más de [X] proyectos con arquitectos en Navarra y País Vasco. Plazos garantizados."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">18-20s</span>
+                <span class="script-text"><strong>CTA:</strong> "Contacta para colaborar en tu próximo proyecto."</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 07 Guión VSL -->
+    <section class="section reveal" id="vsl">
+        <div class="section-header">
+            <div class="section-number">07</div>
+            <h2 class="section-title">Guión del VSL</h2>
+            <p class="section-subtitle">Video Sales Letter — 2.5 minutos — Para la landing page</p>
+        </div>
+
+        <div class="script-card">
+            <div class="script-header">
+                <span class="script-type">VSL — Pain First</span>
+                <span class="script-duration">2:30 minutos</span>
+            </div>
+            <div class="script-title">"Transforma Tu Terraza en un Espacio que Genera Dinero"</div>
+
+            <div class="info-box" style="margin-bottom: 1.5rem;">
+                <h4>Instrucciones de Grabación</h4>
+                <p>Grabar en <span class="highlight">terrazas de hostelería ya montadas</span>. Ir a 2-3 ubicaciones diferentes con un cámara. Tono natural, como si hablaras con un amigo. Mostrar los trabajos reales mientras hablas.</p>
+            </div>
+
+            <div class="script-line">
+                <span class="script-time">0-5s</span>
+                <span class="script-text"><strong>HOOK:</strong> [Miquel de pie en una terraza de restaurante con pérgola] "Si tienes un restaurante con terraza y solo la puedes usar 6 meses al año, este vídeo te va a cambiar la vida."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">5-20s</span>
+                <span class="script-text"><strong>IDENTIFICACIÓN:</strong> "Soy Miquel, CEO y fundador de [Empresa]. Llevo más de [X] años instalando pérgolas bioclimáticas para hostelería en Navarra y País Vasco. He visto cómo una terraza bien hecha puede duplicar la facturación de un restaurante."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">20-45s</span>
+                <span class="script-text"><strong>PROBLEMA:</strong> [Caminar por terraza vacía] "El problema es que la mayoría de hosteleros pierden entre 30.000 y 80.000 euros al año por no poder usar su terraza cuando llueve, hace frío o hace demasiado calor. Mesas vacías. Personal parado. Clientes que se van a la competencia que SÍ tiene terraza cubierta."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">45-70s</span>
+                <span class="script-text"><strong>AGITACIÓN:</strong> "Y cada año que pasa sin solucionarlo, es otro año perdiendo dinero. Tu competencia ya está invirtiendo en esto. Los clientes eligen el restaurante que tiene terraza cómoda todo el año. ¿Cuánto más vas a esperar?"</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">70-110s</span>
+                <span class="script-text"><strong>SOLUCIÓN:</strong> [Mostrar pérgola funcionando — lamas abriéndose, luces LED, cristales] "Una pérgola bioclimática es la solución definitiva. Lamas orientables que se abren con buen tiempo y se cierran cuando llueve. Cristales laterales que protegen del viento. Iluminación LED integrada para crear ambiente. Todo automatizado. Todo a medida. Todo premium."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">110-130s</span>
+                <span class="script-text"><strong>PRUEBA:</strong> [Mostrar 2-3 proyectos terminados] "Este restaurante de aquí facturó un 40% más el primer año después de instalar la pérgola. Este hotel boutique recuperó la inversión en 8 meses. Y este bar de copas ahora tiene lista de espera para su terraza."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">130-145s</span>
+                <span class="script-text"><strong>OFERTA:</strong> "Ofrecemos financiación a 24 meses para que no tengas que hacer un desembolso grande. Presupuesto personalizado sin compromiso. Instalación profesional con plazos garantizados."</span>
+            </div>
+            <div class="script-line">
+                <span class="script-time">145-150s</span>
+                <span class="script-text"><strong>CTA:</strong> "Rellena el formulario aquí abajo con los datos de tu terraza y te preparo un presupuesto a medida en 48 horas. Sin compromiso, sin coste. Dale a tu terraza el potencial que merece."</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 08 Guiones de Reels Virales -->
+    <section class="section reveal" id="reels">
+        <div class="section-header">
+            <div class="section-number">08</div>
+            <h2 class="section-title">Guiones de Reels Virales</h2>
+            <p class="section-subtitle">4 reels listos para grabar — Estructura hook + proceso + reveal + CTA</p>
+        </div>
+
+        <div class="reel-grid">
+            <div class="reel-card">
+                <div class="reel-number">01</div>
+                <div class="reel-title">Antes/Después Hostelería</div>
+                <div class="reel-hook">"Mirad qué terraza más desaprovechada... y mirad ahora. ¿Habéis visto cómo cambia?"</div>
+                <ul class="reel-steps">
+                    <li>Plano de terraza vacía/fea (2s)</li>
+                    <li>Transición rápida (corte seco o zoom)</li>
+                    <li>Reveal: Terraza con pérgola de noche, luces LED, gente cenando (5s)</li>
+                    <li>Voz en off: "Esto es lo que hacemos" (3s)</li>
+                    <li>CTA: "Si quieres esto para tu restaurante, link en bio" (3s)</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Referencia: @coveryourpergola (57M views)</p>
+            </div>
+
+            <div class="reel-card">
+                <div class="reel-number">02</div>
+                <div class="reel-title">Paso a Paso Instalación</div>
+                <div class="reel-hook">"¿Cómo se instala una pérgola bioclimática? Os lo enseño en 30 segundos."</div>
+                <ul class="reel-steps">
+                    <li>Llegada del equipo con materiales (2s)</li>
+                    <li>Montaje de estructura — timelapse rápido (8s)</li>
+                    <li>Instalación de lamas — detalle (5s)</li>
+                    <li>Colocación de cristales laterales (5s)</li>
+                    <li>Conexión eléctrica + LED (3s)</li>
+                    <li>Reveal final: pérgola terminada funcionando (5s)</li>
+                    <li>CTA: "¿Quieres presupuesto? Formulario en bio" (3s)</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Referencia: @the_professional_idiots (Building Most Popular Pergola 2024)</p>
+            </div>
+
+            <div class="reel-card">
+                <div class="reel-number">03</div>
+                <div class="reel-title">POV: Restaurante que Duplicó Facturación</div>
+                <div class="reel-hook">"Este restaurante facturaba 200K al año. Después de instalar esto, factura 320K."</div>
+                <ul class="reel-steps">
+                    <li>Exterior del restaurante (2s)</li>
+                    <li>Terraza antes: mesas vacías, toldo viejo (3s)</li>
+                    <li>Texto: "Inversión: XX.000€" (2s)</li>
+                    <li>Terraza después: pérgola premium, llena de gente (5s)</li>
+                    <li>Texto: "ROI: 8 meses" (2s)</li>
+                    <li>Miquel a cámara: "Esto es lo que hacemos. Creamos espacios donde la gente vive momentos increíbles." (5s)</li>
+                    <li>CTA: "Link en bio para tu presupuesto" (2s)</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Referencia: @twobrothersmadrid (Antes/Después terrazas)</p>
+            </div>
+
+            <div class="reel-card">
+                <div class="reel-number">04</div>
+                <div class="reel-title">Reel de Autoridad — Un Día Conmigo</div>
+                <div class="reel-hook">"Un día normal instalando pérgolas bioclimáticas en Pamplona."</div>
+                <ul class="reel-steps">
+                    <li>Café por la mañana + revisión de proyectos (3s)</li>
+                    <li>Llegada a obra — saludo al equipo (3s)</li>
+                    <li>Supervisión de instalación — detalles técnicos (8s)</li>
+                    <li>Reunión con cliente hostelero (3s)</li>
+                    <li>Resultado final del día — proyecto terminado (5s)</li>
+                    <li>A cámara: "Esto es lo que hago cada día. Si tienes un proyecto, hablamos." (5s)</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Formato autoridad — NO intenta ser viral, genera confianza</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Calendario de Publicación</h4>
+            <ul>
+                <li><strong>Lunes:</strong> Reel viral (antes/después o paso a paso)</li>
+                <li><strong>Jueves:</strong> Reel de autoridad (día a día, expertise, detalles técnicos)</li>
+                <li>Publicar en TikTok + Instagram Reels simultáneamente</li>
+                <li>Grabar SIEMPRE cada proyecto desde el inicio hasta el final</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 09 Delegación y Reclutamiento -->
+    <section class="section reveal" id="delegacion">
+        <div class="section-header">
+            <div class="section-number">09</div>
+            <h2 class="section-title">Delegación y Reclutamiento</h2>
+            <p class="section-subtitle">Estructura de equipo y contratación de comercial</p>
+        </div>
+
+        <div class="quote-box">
+            <blockquote>"José Elías (Audax, 2.500M€) tiene todo delegado. En 2.5 horas no recibió ni una sola llamada."</blockquote>
+            <cite>— Ejemplo de delegación extrema</cite>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--accent); margin-bottom: 1rem;">Tu Nuevo Rol como CEO</h3>
+            <ul class="checklist">
+                <li>Gestionar equipo 1-2 horas por la mañana</li>
+                <li>Cerrar personalmente los tickets de hostelería (80-120K€)</li>
+                <li>Crear contenido (reels, vídeos, marca personal)</li>
+                <li>Delegar tickets residenciales (12-25K€) al comercial</li>
+                <li>Poner un responsable de área en cada departamento</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3 style="color: var(--accent); margin-bottom: 1rem;">Reclutamiento del Comercial</h3>
+            <p>Método para encontrar tu mano derecha comercial:</p>
+            <br>
+            <div class="erp-feature">
+                <div class="erp-icon">🎥</div>
+                <div class="erp-content">
+                    <h4>Paso 1: Grabar vídeo de 20 minutos</h4>
+                    <p>Explica la oferta de trabajo: qué haces, qué buscas, qué ofreces (comisiones, crecimiento, producto premium).</p>
+                </div>
+            </div>
+            <div class="erp-feature">
+                <div class="erp-icon">📱</div>
+                <div class="erp-content">
+                    <h4>Paso 2: Subir a redes + Meta Ads</h4>
+                    <p>Publicar el vídeo como anuncio segmentado a comerciales del sector. Formulario de aplicación debajo.</p>
+                </div>
+            </div>
+            <div class="erp-feature">
+                <div class="erp-icon">📋</div>
+                <div class="erp-content">
+                    <h4>Paso 3: Filtrar candidatos</h4>
+                    <p>Los leads llegan a WhatsApp. Filtrar por experiencia y motivación. Entrevista con los top 5.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h4>Perfil del Comercial Ideal</h4>
+            <ul>
+                <li>Experiencia en ventas B2B (preferible sector construcción/reformas)</li>
+                <li>Capaz de cerrar tickets de 12-25K€</li>
+                <li>Autónomo, con coche propio para visitas</li>
+                <li>Modelo: base + comisión por cierre</li>
+                <li>Zona: Navarra + País Vasco + expansión a Islas</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 10 Siguiente Paso -->
+    <section class="cta-section reveal">
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <div class="section-number">10</div>
+            <h2 class="section-title">Siguiente Paso</h2>
+        </div>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 2rem; font-size: 1.1rem;">
+            Agenda tu próxima sesión en Focus Consultor para construir el embudo de ventas completo, configurar el bot de IA y lanzar los anuncios.
+        </p>
+        <a href="https://focusconsultor.com" target="_blank" class="cta-button">
+            Agendar Sesión en Focus Consultor
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">FOCUS<span>.</span></div>
+        <p>CONSULTING GROUP</p>
+        <p style="margin-top: 1rem;">Documento confidencial — Preparado exclusivamente para Miquel</p>
+    </footer>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        });
+
+        // Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        reveals.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
